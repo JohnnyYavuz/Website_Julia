@@ -230,9 +230,19 @@
     .menu-toggle.open span:nth-child(2){opacity: 0;}
     .menu-toggle.open span:nth-child(3){transform: rotate(-45deg) translate(5px, -5px);}
     .hero-meta{left:20px; right:20px;}
-    /* Hero mobile font sizes */
-    .hero-title{font-size: clamp(32px, 7vw, 48px) !important;}
-    .hero-sub b{font-size: clamp(24px, 5vw, 32px) !important;}
+    /* Hero mobile styles */
+    .hero-title{
+      font-size: clamp(32px, 7vw, 48px) !important;
+      line-height: 1.1 !important;
+      letter-spacing: -0.02em !important;
+    }
+    .hero-sub b{font-size: clamp(20px, 4.5vw, 28px) !important;}
+    /* Smaller CTA buttons on mobile */
+    .hero-cta-row .btn{
+      padding: 12px 20px !important;
+      font-size: 10px !important;
+    }
+    .hero-cta-row{gap: 12px;}
   }
   .menu-toggle{display: none;}
 
@@ -1692,7 +1702,7 @@ function Hero({ nextEvent }){
     <section className="hero" id="hero" data-screen-label="hero">
       <GongCanvas />
       <div className="hero-inner">
-        <h1 className="hero-title" style={{fontSize:'clamp(28px, 4.2vw, 62px)', lineHeight:1.3, fontWeight:300, letterSpacing:'-0.01em'}}>
+        <h1 className="hero-title" style={{fontFamily:'"Newsreader", serif', fontSize:'clamp(36px, 5.5vw, 72px)', lineHeight:1.02, fontWeight:300, letterSpacing:'-0.02em'}}>
           <WordReveal
             lines={["Oft hält der Körper Dinge fest,", "für die du keine Worte hast."]}
             delay={300}
