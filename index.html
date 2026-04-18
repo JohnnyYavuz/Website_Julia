@@ -199,10 +199,12 @@
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       flex-direction: column;
-      padding: 24px 24px 24px 24px;
+      padding: 24px;
       gap: 0;
       border-bottom: 1px solid var(--rule);
-      align-items: flex-start;
+      align-items: flex-start !important;
+      justify-self: stretch !important;
+      text-align: left !important;
       transform: translateY(-20px);
       opacity: 0;
       visibility: hidden;
@@ -217,6 +219,7 @@
     nav.top ul li{
       border-bottom: 1px solid var(--rule);
       width: 100%;
+      text-align: left;
       opacity: 0;
       transform: translateX(-10px);
       transition: opacity 0.3s ease, transform 0.3s ease;
@@ -235,7 +238,8 @@
       display: block;
       padding: 16px 0;
       font-size: 14px;
-      text-align: left;
+      text-align: left !important;
+      width: 100%;
     }
     .menu-toggle{
       display: flex !important;
