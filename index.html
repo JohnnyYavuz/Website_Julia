@@ -1,0 +1,2571 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>GONG FREQUENCIES — Julia Martyn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&family=IBM+Plex+Sans:wght@300;400;500&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Terracotta (default) */
+    --bg:        #1a120d;
+    --bg-2:      #231812;
+    --paper:     #efe4d2;
+    --ink:       #efe4d2;
+    --ink-soft:  #c9b9a2;
+    --ink-dim:   #8a7a64;
+    --accent:    #c2613a;   /* terracotta */
+    --accent-2:  #e0a054;   /* ocker */
+    --rule:      rgba(239,228,210,0.14);
+    --grain:     0.06;
+  }
+  [data-palette="ocker"] {
+    --bg: #1c160c; --bg-2: #26200f;
+    --paper: #f2e7ce; --ink: #f2e7ce;
+    --ink-soft:#d5c295; --ink-dim:#8f7f56;
+    --accent:#d29244; --accent-2:#a85a2c;
+    --rule: rgba(242,231,206,0.14);
+  }
+  [data-palette="espresso"] {
+    --bg: #120c0a; --bg-2: #1a120f;
+    --paper: #e9ddc8; --ink: #e9ddc8;
+    --ink-soft:#b8a78d; --ink-dim:#796857;
+    --accent:#8a3a1f; --accent-2:#c28248;
+    --rule: rgba(233,221,200,0.12);
+  }
+
+  *,*::before,*::after{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);}
+  body{
+    font-family: "IBM Plex Sans", system-ui, sans-serif;
+    font-weight: 300;
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+  ::selection{background:var(--accent);color:var(--bg)}
+  a{color:inherit}
+
+  /* paper grain overlay */
+  body::before{
+    content:""; position:fixed; inset:0; pointer-events:none; z-index:100;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.93 0 0 0 0 0.89 0 0 0 0 0.82 0 0 0 0.5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='1'/></svg>");
+    opacity: var(--grain);
+    mix-blend-mode: overlay;
+  }
+
+  .serif{font-family:"Newsreader", "Cormorant Garamond", Georgia, serif; font-weight:300; letter-spacing:-0.01em;}
+  .mono{font-family:"JetBrains Mono", ui-monospace, monospace; font-weight:300; letter-spacing:0.04em;}
+
+  /* === NAV === */
+  nav.top{
+    position: fixed; top:0; left:0; right:0; z-index: 50;
+    display:grid; grid-template-columns: 1fr auto 1fr; align-items:center;
+    padding: 18px 36px;
+    background: rgba(18, 12, 10, 0.42);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    backdrop-filter: blur(18px) saturate(140%);
+    border-bottom: 1px solid rgba(239,228,210,0.08);
+    color: #efe4d2;
+    transition: background .4s ease, border-color .4s ease;
+  }
+  nav.top.scrolled{
+    background: rgba(58, 38, 28, 0.92);
+    border-bottom-color: rgba(239,228,210,0.22);
+    backdrop-filter: blur(14px) saturate(1.1);
+    -webkit-backdrop-filter: blur(14px) saturate(1.1);
+  }
+  }
+  nav.top .brand{
+    font-family:"Newsreader", serif; font-style: italic; font-weight:300;
+    font-size: 20px; letter-spacing: 0.02em;
+  }
+  nav.top .brand b{font-style:normal; font-weight:400;}
+  nav.top ul{list-style:none; margin:0; padding:0; display:flex; gap:32px; font-size:11px; letter-spacing:0.22em; text-transform:uppercase; justify-self:center;}
+  nav.top ul a{
+    position: relative;
+    text-decoration:none;
+    color: rgba(239,228,210,0.78);
+    padding: 6px 0;
+    transition: color .3s ease;
+  }
+  nav.top ul a::after{
+    content:""; position:absolute; left:0; bottom: 0;
+    width: 100%; height: 1px;
+    background: var(--accent-2, #e0a054);
+    transform: scaleX(0); transform-origin: right center;
+    transition: transform .5s cubic-bezier(.22,.68,.22,1);
+  }
+  nav.top ul a:hover{color: #efe4d2;}
+  nav.top ul a:hover::after{transform: scaleX(1); transform-origin: left center;}
+  nav.top .cta{
+    border:1px solid rgba(239,228,210,0.35);
+    padding: 10px 18px; border-radius: 999px;
+    font-size:11px; letter-spacing:0.22em; text-transform:uppercase;
+    text-decoration:none; color: #efe4d2;
+    transition: background .3s ease, border-color .3s ease, color .3s ease;
+  }
+  nav.top .cta:hover{
+    background: var(--accent-2, #e0a054);
+    border-color: var(--accent-2, #e0a054);
+    color: #120c0a;
+  }
+
+  /* === HERO === */
+  section.hero{
+    position: relative;
+    height: auto; min-height: 0;
+    padding: 140px 24px 120px;
+    display:flex; flex-direction:column; justify-content:center; align-items:center;
+    overflow: hidden;
+  }
+  canvas#gong-canvas{
+    position: absolute; inset: 0; width:100%; height:100%;
+    z-index: 0;
+  }
+  .hero-inner{
+    position: relative; z-index: 2;
+    text-align:center;
+    padding: 0 24px;
+    max-width: 1100px;
+  }
+  .kicker{
+    font-family:"JetBrains Mono", monospace; font-size: 11px;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--ink-soft);
+    display: inline-flex; gap: 14px; align-items:center;
+  }
+  .kicker::before, .kicker::after{
+    content:""; display:block; width: 32px; height:1px; background: currentColor; opacity:.4;
+  }
+  h1.hero-title{
+    font-family:"Newsreader", serif;
+    font-weight: 300;
+    font-size: clamp(48px, 9vw, 140px);
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+    margin: 28px 0 24px;
+    color: var(--paper);
+  }
+  h1.hero-title em{
+    font-style: italic; font-weight: 300;
+    color: var(--accent-2);
+  }
+  .hero-sub{
+    max-width: 540px; margin: 0 auto;
+    font-size: 16px; color: var(--ink-soft);
+  }
+  .hero-meta{
+    position: absolute; bottom: 24px; left: 36px; right: 36px;
+    display:flex; justify-content:space-between; align-items:flex-end;
+    font-family:"JetBrains Mono", monospace; font-size:11px;
+    letter-spacing:0.2em; text-transform:uppercase; color: var(--ink-dim);
+    z-index: 2;
+  }
+  .hero-meta .scroll{display:flex; align-items:center; gap:12px;}
+  .hero-meta .scroll .line{
+    width: 40px; height:1px; background: var(--ink-dim);
+    position: relative; overflow:hidden;
+  }
+  .hero-meta .scroll .line::after{
+    content:""; position:absolute; inset:0;
+    background: var(--accent-2);
+    animation: sweep 3s infinite ease-in-out;
+  }
+  @keyframes sweep{
+    0%{transform:translateX(-100%)} 100%{transform:translateX(100%)}
+  }
+
+  /* === Section generic === */
+  section{position:relative; padding: 140px 36px;}
+  .container{max-width: 1200px; margin: 0 auto;}
+  .two-col{display:grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items:start;}
+  @media (max-width: 820px){
+    .two-col{grid-template-columns: 1fr; gap: 40px;}
+    section{padding: 90px 24px;}
+    nav.top{padding: 18px 20px;}
+    nav.top ul{display:none;}
+    .hero-meta{left:20px; right:20px;}
+  }
+
+  .eyebrow{
+    font-family:"JetBrains Mono", monospace;
+    font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase;
+    color: var(--accent-2);
+    margin-bottom: 24px;
+    display:flex; align-items:center; gap: 14px;
+  }
+  .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);}
+
+  h2.display{
+    font-family:"Newsreader", serif; font-weight:300;
+    font-size: clamp(36px, 5.5vw, 72px);
+    line-height: 1.02; letter-spacing: -0.02em;
+    margin: 0 0 24px;
+    color: var(--paper);
+  }
+  h2.display em{font-style:italic; color:var(--accent-2);}
+  .lede{font-size: 19px; line-height: 1.55; color: var(--ink-soft); max-width: 44ch;}
+  .lede.serif{font-family:"Newsreader", serif; font-size: 24px; line-height:1.4;}
+
+  hr.rule{border:0; border-top:1px solid var(--rule); margin: 0;}
+
+  /* === Pillars (3) === */
+  .pillars{display:grid; grid-template-columns: repeat(3,1fr); gap: 0;
+    border-top: 1px solid var(--rule);
+  }
+  .pillar{padding: 56px 32px; border-right: 1px solid var(--rule);}
+  .pillar:last-child{border-right:none;}
+  .pillar .num{
+    font-family:"JetBrains Mono", monospace; font-size: 11px; color: var(--ink-dim);
+    letter-spacing: 0.2em;
+  }
+  .pillar h3{
+    font-family:"Newsreader", serif; font-weight:300;
+    font-size: 28px; letter-spacing: -0.01em; margin: 16px 0 16px;
+    color: var(--paper);
+  }
+  .pillar p{color: var(--ink-soft); font-size: 15.5px; margin: 0;}
+  @media (max-width: 820px){
+    .pillars{grid-template-columns:1fr;}
+    .pillar{border-right:none; border-bottom: 1px solid var(--rule);}
+  }
+
+  /* === Pillars triptych (Körper / Geist / Seele) === */
+  .pillars-section{padding-top: 0;}
+  .pillars-head{margin-bottom: 80px;}
+  .pillars-triptych{
+    list-style: none; margin: 0; padding: 0;
+    display: flex; flex-direction: column;
+    border-top: 1px solid var(--rule);
+  }
+  .pillar-row{
+    display: grid;
+    grid-template-columns: 140px 1fr 2fr;
+    gap: 48px;
+    align-items: baseline;
+    padding: 56px 0;
+    border-bottom: 1px solid var(--rule);
+    position: relative;
+  }
+  .pillar-roman{
+    font-family: "Newsreader", serif;
+    font-style: italic; font-weight: 300;
+    font-size: clamp(56px, 6vw, 88px);
+    color: var(--accent-2);
+    line-height: 1;
+    opacity: 0.85;
+  }
+  .pillar-title{
+    font-family: "Newsreader", serif;
+    font-weight: 300;
+    font-size: clamp(32px, 3.2vw, 44px);
+    letter-spacing: -0.01em;
+    color: var(--paper);
+    margin: 0;
+  }
+  .pillar-desc{
+    font-family: "Newsreader", serif;
+    font-weight: 300;
+    font-size: 19px; line-height: 1.6;
+    color: var(--ink-soft);
+    max-width: 52ch;
+    margin: 0;
+  }
+  @media (max-width: 820px){
+    .pillar-row{
+      grid-template-columns: 1fr;
+      gap: 16px;
+      padding: 40px 0;
+    }
+  }
+
+  /* === Intro layout with image === */
+  .intro-layout{
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 64px;
+    align-items: start;
+  }
+  .intro-content{
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .intro-image{
+    position: sticky;
+    top: 120px;
+    border: 1px solid var(--rule);
+    overflow: hidden;
+  }
+  .intro-image img{
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: grayscale(20%) contrast(1.05);
+    transition: filter .6s ease;
+  }
+  .intro-image:hover img{
+    filter: grayscale(0%) contrast(1);
+  }
+  @media(max-width:960px){
+    .intro-layout{grid-template-columns: 1fr; gap: 48px;}
+    .intro-image{position: relative; top: 0;}
+  }
+
+  /* === Gong facts row (Intro) === */
+  .gong-facts{
+    margin-top: 96px;
+    display:grid; grid-template-columns: repeat(3, 1fr); gap: 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .gong-fact{
+    padding: 48px 36px;
+    border-right: 1px solid var(--rule);
+  }
+  .gong-fact:last-child{border-right:none;}
+  .gong-fact-num{
+    font-family: "Newsreader", serif;
+    font-weight: 300; font-style: italic;
+    font-size: clamp(44px, 5vw, 72px);
+    color: var(--accent-2);
+    line-height: 1; margin-bottom: 12px;
+  }
+  .gong-fact-label{
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase;
+    color: var(--ink-dim); margin-bottom: 20px;
+  }
+  .gong-fact-text{
+    color: var(--ink-soft);
+    font-size: 15.5px; line-height: 1.65;
+    max-width: 34ch;
+  }
+  @media (max-width: 820px){
+    .gong-facts{grid-template-columns:1fr; margin-top: 64px;}
+    .gong-fact{border-right:none; border-bottom: 1px solid var(--rule); padding: 36px 20px;}
+    .gong-fact:last-child{border-bottom:none;}
+  }
+
+  /* === Offerings === */
+  .offerings{display:grid; grid-template-columns: 1fr 1fr; gap: 24px;}
+  .offer-card{
+    position: relative;
+    padding: 48px 40px 40px;
+    background: var(--bg-2);
+    border: 1px solid var(--rule);
+    overflow: hidden;
+    transition: transform .6s cubic-bezier(.2,.7,.2,1), border-color .3s;
+  }
+  .offer-card:hover{border-color: var(--accent);}
+  .offer-card .tag{
+    font-family:"JetBrains Mono", monospace; font-size: 10px;
+    letter-spacing: 0.24em; text-transform: uppercase;
+    color: var(--accent-2);
+  }
+  .offer-card h3{
+    font-family:"Newsreader", serif; font-weight:300;
+    font-size: 38px; line-height:1.05; letter-spacing:-0.01em;
+    margin: 20px 0 16px; color: var(--paper);
+  }
+  .offer-card p{color: var(--ink-soft); margin: 0 0 28px; font-size:15.5px;}
+  .offer-card ul{
+    list-style:none; padding:0; margin: 0 0 28px;
+    font-size: 14px; color: var(--ink-soft);
+  }
+  .offer-card ul li{
+    padding: 10px 0; border-top: 1px solid var(--rule);
+    display:flex; justify-content:space-between; gap: 12px;
+  }
+  .offer-card ul li:last-child{border-bottom: 1px solid var(--rule);}
+  .offer-card ul li span:last-child{color: var(--ink-dim); font-family:"JetBrains Mono", monospace; font-size:11px; letter-spacing:.1em;}
+  .offer-card .decor{
+    position: absolute; top: -60px; right: -60px;
+    width: 240px; height: 240px; border-radius:50%;
+    border: 1px solid var(--rule);
+  }
+  .offer-card .decor::before{
+    content:""; position:absolute; inset: 30px; border-radius:50%;
+    border: 1px solid var(--rule);
+  }
+  @media (max-width: 820px){ .offerings{grid-template-columns:1fr;} }
+
+  /* === Events === */
+  .events-filter{
+    display:flex; gap: 10px; flex-wrap: wrap; margin-bottom: 32px;
+    font-family:"JetBrains Mono", monospace; font-size: 11px;
+    letter-spacing:0.2em; text-transform:uppercase;
+  }
+  .events-filter button{
+    background: transparent; color: var(--ink-soft);
+    border: 1px solid var(--rule);
+    padding: 10px 18px; border-radius: 999px;
+    cursor: pointer; transition: all .2s;
+    font: inherit;
+  }
+  .events-filter button:hover{color:var(--paper); border-color: var(--ink-soft);}
+  .events-filter button[data-active="true"]{
+    background: var(--accent); color: #fff; border-color: var(--accent);
+  }
+  .event-row{
+    display:grid; grid-template-columns: 72px 100px 1.2fr 1fr auto; gap: 24px; align-items:center;
+    padding: 28px 0;
+    border-top: 1px solid var(--rule);
+    transition: background .3s;
+    cursor: pointer;
+    position: relative;
+  }
+  .event-row:last-child{border-bottom: 1px solid var(--rule);}
+  .event-row:hover{background: var(--bg-2);}
+  .event-row .date{
+    font-family:"Newsreader", serif;
+    font-size: 36px; line-height:1; color: var(--paper);
+    letter-spacing: -0.02em;
+  }
+  .event-row .date .mo{
+    display:block; font-family:"JetBrains Mono", monospace;
+    font-size: 10px; letter-spacing: 0.3em; color: var(--ink-dim);
+    margin-top: 8px;
+  }
+  .event-row .title h4{
+    font-family:"Newsreader", serif; font-weight:400;
+    font-size: 24px; margin: 0 0 6px; color: var(--paper);
+  }
+  .event-row .title span{font-size: 14px; color: var(--ink-dim);}
+  .event-row .loc{font-size: 14px; color: var(--ink-soft);}
+  .event-row .loc small{display:block; color: var(--ink-dim); font-family:"JetBrains Mono", monospace; font-size: 10px; letter-spacing:.2em; margin-bottom:4px;}
+  .event-row .arrow{
+    width: 48px; height: 48px; border-radius: 50%;
+    border: 1px solid var(--rule);
+    display:flex; align-items:center; justify-content:center;
+    color: var(--ink-soft); transition: all .3s;
+  }
+  .event-row:hover .arrow{background: var(--accent); color: #fff; border-color: var(--accent);}
+  @media (max-width: 820px){
+    .event-row{grid-template-columns: 56px 70px 1fr; gap: 16px;}
+    .event-row .loc, .event-row .arrow{display:none;}
+    .event-row .date{font-size:28px;}
+    .event-row .event-thumb{width: 56px; height: 56px;}
+  }
+
+  /* === Sound Player === */
+  .player{
+    background: var(--bg-2);
+    border: 1px solid var(--rule);
+    padding: 56px;
+    display:grid; grid-template-columns: 1fr 1fr; gap: 56px;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .player canvas.viz{
+    width: 100%; height: 280px;
+    display: block;
+  }
+  .player .controls{display:flex; align-items:center; gap: 24px; margin-top: 28px;}
+  .player .play{
+    width: 72px; height:72px; border-radius:50%;
+    border: 1px solid var(--accent); background: transparent;
+    color: var(--accent); cursor: pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition: all .3s;
+  }
+  .player .play:hover{background: var(--accent); color:#fff;}
+  .player .play.playing{background: var(--accent); color:#fff;}
+  .player .meta{font-family:"JetBrains Mono", monospace; font-size:11px; letter-spacing:.2em; color:var(--ink-dim); text-transform: uppercase;}
+  .player .meta b{color: var(--ink-soft); font-weight: 400;}
+  .player .consent{
+    margin-top: 16px;
+    font-size: 12px; color: var(--ink-dim);
+    max-width: 360px; line-height: 1.5;
+  }
+  @media (max-width: 820px){ .player{grid-template-columns:1fr; padding: 32px;} }
+
+  /* === Testimonials === */
+  .testimonial-track{
+    display:flex; gap: 24px; overflow-x:auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 12px; margin: 0 -36px; padding-left: 36px; padding-right:36px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent) transparent;
+  }
+  .testimonial-track::-webkit-scrollbar{height:4px;}
+  .testimonial-track::-webkit-scrollbar-thumb{background: var(--accent); border-radius:4px;}
+  .tcard{
+    flex: 0 0 clamp(300px, 42vw, 520px);
+    background: var(--bg-2);
+    border: 1px solid var(--rule);
+    padding: 40px;
+    scroll-snap-align: start;
+  }
+  .tcard .q{
+    font-family:"Newsreader", serif; font-weight:300; font-style: italic;
+    font-size: 22px; line-height: 1.4; color: var(--paper);
+    margin: 0 0 28px;
+  }
+  .tcard .q::before{content:"„"; color: var(--accent-2); font-size: 48px; line-height:0; vertical-align:-18px; margin-right:4px;}
+  .tcard .who{
+    font-family:"JetBrains Mono", monospace; font-size:11px;
+    letter-spacing:0.2em; text-transform:uppercase; color: var(--ink-dim);
+    display:flex; justify-content:space-between;
+  }
+  .tcard .who b{color: var(--ink-soft); font-weight: 400;}
+
+  /* === Contact === */
+  .contact-form{display:grid; gap: 20px; max-width: 560px;}
+  .contact-form label{
+    font-family:"JetBrains Mono", monospace; font-size:10px;
+    letter-spacing:0.24em; text-transform: uppercase; color: var(--ink-dim);
+    display:block; margin-bottom: 8px;
+  }
+  .contact-form input, .contact-form textarea{
+    width:100%; background: transparent; color: var(--paper);
+    border:none; border-bottom: 1px solid var(--rule);
+    padding: 10px 0; font: inherit; font-size: 17px;
+    transition: border-color .3s;
+  }
+  .contact-form input:focus, .contact-form textarea:focus{
+    outline:none; border-bottom-color: var(--accent);
+  }
+  .contact-form textarea{resize:vertical; min-height: 120px;}
+  .btn{
+    display:inline-flex; align-items:center; gap: 14px;
+    padding: 16px 28px; background: var(--accent); color: #fff;
+    border: none; cursor: pointer;
+    font-family:"JetBrains Mono", monospace; font-size:11px;
+    letter-spacing:0.24em; text-transform: uppercase;
+    border-radius: 999px; transition: all .3s;
+    text-decoration:none;
+  }
+  .btn:hover{background: var(--accent-2);}
+  .btn.ghost{background: transparent; border: 1px solid var(--ink-soft); color: var(--paper);}
+  .btn.ghost:hover{border-color: var(--accent); color: var(--accent);}
+
+  /* === Footer === */
+  footer{
+    padding: 60px 36px 40px;
+    border-top: 1px solid var(--rule);
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap: 20px;
+    font-family:"JetBrains Mono", monospace; font-size: 11px;
+    letter-spacing:0.2em; text-transform:uppercase; color: var(--ink-dim);
+  }
+  footer a{text-decoration:none; color: var(--ink-soft);}
+
+  /* === Quiet mode === */
+  [data-quiet="true"] canvas#gong-canvas{opacity: 0.4; filter: blur(1px);}
+  [data-quiet="true"] *{animation-duration: 0.01ms !important; transition-duration: 0.2s !important;}
+  [data-quiet="true"] .hero-meta .scroll .line::after{display:none;}
+
+  /* === Tweaks panel === */
+  .tweaks-panel{
+    position: fixed; bottom: 24px; right: 24px; z-index: 200;
+    background: #0c0805; border:1px solid var(--accent);
+    padding: 20px; width: 280px; color: var(--paper);
+    font-family:"JetBrains Mono", monospace; font-size:11px;
+    letter-spacing:0.1em; display:none;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+  }
+  .tweaks-panel[data-open="true"]{display:block;}
+  .tweaks-panel h5{
+    margin: 0 0 16px; font-size: 11px; letter-spacing: 0.3em;
+    text-transform:uppercase; color: var(--accent-2);
+  }
+  .tweaks-panel .row{margin-bottom: 18px;}
+  .tweaks-panel .row label{display:block; margin-bottom:8px; color: var(--ink-dim);}
+  .tweaks-panel .swatches{display:flex; gap: 8px;}
+  .tweaks-panel .swatch{
+    flex:1; height: 42px; border:1px solid var(--rule); cursor:pointer;
+    display:flex; align-items:end; justify-content:center; padding-bottom: 4px;
+    font-size: 9px; text-transform:uppercase; letter-spacing:.2em;
+    color: var(--paper);
+  }
+  .tweaks-panel .swatch[data-active="true"]{border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent);}
+  .tweaks-panel .toggle{
+    display:flex; justify-content:space-between; align-items:center; cursor:pointer;
+  }
+  .tweaks-panel .toggle .pill{
+    width: 36px; height: 20px; background: var(--rule); border-radius: 999px; position:relative;
+    transition: background .3s;
+  }
+  .tweaks-panel .toggle .pill::after{
+    content:""; position:absolute; top: 2px; left: 2px;
+    width: 16px; height:16px; border-radius:50%; background: var(--paper);
+    transition: left .3s;
+  }
+  .tweaks-panel .toggle[data-on="true"] .pill{background: var(--accent);}
+  .tweaks-panel .toggle[data-on="true"] .pill::after{left: 18px;}
+
+  html{scroll-behavior: smooth;}
+
+  /* intersection fade — buttery, larger shift + tiny scale */
+  .reveal{
+    opacity:0;
+    transform: translateY(72px) scale(0.98);
+    transition:
+      opacity 1.8s cubic-bezier(.16,.84,.24,1),
+      transform 1.8s cubic-bezier(.16,.84,.24,1);
+    will-change: opacity, transform;
+  }
+  .reveal.in{opacity:1; transform: translateY(0) scale(1);}
+  .reveal[data-delay="1"]{transition-delay:.18s}
+  .reveal[data-delay="2"]{transition-delay:.36s}
+  .reveal[data-delay="3"]{transition-delay:.54s}
+  .reveal[data-delay="4"]{transition-delay:.72s}
+  .reveal[data-delay="5"]{transition-delay:.90s}
+  .reveal[data-delay="6"]{transition-delay:1.08s}
+
+  @media (prefers-reduced-motion: reduce){
+    .reveal, .reveal.in{opacity:1 !important; transform:none !important; transition:none !important;}
+    html{scroll-behavior: auto;}
+  }
+
+  /* Horizontal reveal — slides in from the left */
+  .reveal-x{
+    opacity: 0;
+    transform: translateX(-64px);
+    transition:
+      opacity 1.4s cubic-bezier(.16,.84,.24,1),
+      transform 1.4s cubic-bezier(.16,.84,.24,1);
+    will-change: opacity, transform;
+  }
+  .reveal-x.in{opacity: 1; transform: translateX(0);}
+  .reveal-x[data-delay="1"]{transition-delay: .0s}
+  .reveal-x[data-delay="2"]{transition-delay: .35s}
+  .reveal-x[data-delay="3"]{transition-delay: .70s}
+  .reveal-x[data-delay="4"]{transition-delay: 1.05s}
+  @media (prefers-reduced-motion: reduce){
+    .reveal-x, .reveal-x.in{opacity:1 !important; transform:none !important; transition:none !important;}
+  }
+
+  /* ======= UX UPGRADES ======= */
+
+  /* Scroll progress bar (top) */
+  .scroll-progress{
+    position: fixed; top:0; left:0; height: 2px;
+    background: var(--accent-2);
+    z-index: 90; width: 0%;
+    transition: width .15s linear;
+    box-shadow: 0 0 12px var(--accent-2);
+  }
+
+  /* Custom resonance cursor (desktop only) */
+  @media (hover: hover) and (pointer: fine){
+    body.has-cursor { cursor: none; }
+    body.has-cursor a, body.has-cursor button, body.has-cursor input, body.has-cursor textarea, body.has-cursor [data-cursor]{ cursor:none; }
+    .cursor-ring{
+      position: fixed; top:0; left:0; pointer-events:none; z-index: 9999;
+      width: 36px; height:36px; border-radius:50%;
+      border: 1px solid var(--accent-2);
+      transform: translate(-50%,-50%);
+      transition: width .25s ease, height .25s ease, border-color .25s ease, background .25s ease;
+      mix-blend-mode: difference;
+    }
+    .cursor-ring.big{ width: 88px; height:88px; background: rgba(224,160,84,0.08); border-color: var(--accent);}
+    .cursor-ring.text{ width: 6px; height:26px; border-radius:2px; background: var(--accent-2);}
+    .cursor-dot{
+      position: fixed; top:0; left:0; pointer-events:none; z-index: 9999;
+      width: 4px; height:4px; border-radius:50%;
+      background: var(--paper);
+      transform: translate(-50%,-50%);
+      mix-blend-mode: difference;
+    }
+  }
+
+  /* Typewriter cursor */
+  .tw-cursor{
+    display:inline-block; width: 3px; background: var(--accent-2);
+    margin-left: 4px; height: 0.85em; vertical-align: -0.05em;
+    animation: blink 0.8s step-end infinite;
+  }
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+  @keyframes wordUp{
+    0%{opacity:0; transform: translateY(110%);}
+    60%{opacity:1;}
+    100%{opacity:1; transform: translateY(0);}
+  }
+  .tw-char{visibility:hidden;}
+
+  /* CTA pulse aura */
+  .btn.pulse{animation: ctaPulse 3.2s ease infinite;}
+  @keyframes ctaPulse{
+    0%,100%{box-shadow: 0 4px 20px rgba(0,0,0,0.25), 0 0 0 0 var(--accent);}
+    55%{box-shadow: 0 4px 20px rgba(0,0,0,0.25), 0 0 0 14px rgba(0,0,0,0);}
+  }
+  /* Shimmer sweep */
+  .btn.pulse{position: relative; overflow: hidden;}
+  .btn.pulse::after{
+    content:""; position:absolute; top:0; bottom:0; left:-80%; width:50%;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.25) 50%, transparent 100%);
+    transform: skewX(-18deg);
+    animation: btnShimmer 4s ease infinite 1.2s;
+    pointer-events:none;
+  }
+  @keyframes btnShimmer{
+    0%{left:-80%; opacity:1}
+    40%{left:130%; opacity:1}
+    41%{opacity:0}
+    100%{left:130%; opacity:0}
+  }
+
+  /* Magnetic buttons — inline transform via JS; base transition */
+  .magnet{transition: transform .25s cubic-bezier(.34,1.56,.64,1);}
+
+  /* Stats row */
+  .stats{
+    display:grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    margin-top: 60px;
+  }
+  .stat{
+    padding: 40px 24px; border-right: 1px solid var(--rule);
+  }
+  .stat:last-child{border-right:none;}
+  .stat .num{
+    font-family:"Newsreader", serif; font-weight:300;
+    font-size: clamp(40px, 5vw, 64px); color: var(--paper);
+    line-height:1; letter-spacing:-0.02em;
+  }
+  .stat .num em{font-style:italic; color: var(--accent-2);}
+  .stat .label{
+    font-family:"JetBrains Mono", monospace; font-size:10px;
+    letter-spacing:0.24em; text-transform:uppercase; color: var(--ink-dim);
+    margin-top: 14px;
+  }
+  @media (max-width: 820px){ .stats{grid-template-columns: repeat(2,1fr);} .stat:nth-child(2){border-right:none;} .stat:nth-child(1), .stat:nth-child(2){border-bottom:1px solid var(--rule);} }
+
+  /* Before/After slider — "vor Gong / nach Gong" feeling state slider */
+  .ba-wrap{
+    position:relative; aspect-ratio: 16/10;
+    border: 1px solid var(--rule); background: var(--bg-2);
+    overflow:hidden; user-select:none; touch-action:none;
+  }
+  .ba-layer{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; padding:40px;}
+  .ba-label{
+    position:absolute; top: 20px; left: 20px;
+    font-family:"JetBrains Mono", monospace; font-size:10px;
+    letter-spacing:0.28em; text-transform:uppercase; color: var(--paper);
+    background: rgba(0,0,0,0.45); padding: 6px 14px; border-radius: 999px;
+    backdrop-filter: blur(6px);
+  }
+  .ba-layer.after .ba-label{left: auto; right: 20px; background: rgba(194,97,58,0.6);}
+  .ba-canvas{position:absolute; inset:0;}
+  .ba-after{clip-path: inset(0 0 0 50%);}
+  .ba-handle{
+    position:absolute; top:0; bottom:0; left: 50%;
+    width: 2px; background: var(--paper);
+    transform: translateX(-50%);
+    cursor: ew-resize;
+  }
+  .ba-handle::before{
+    content:""; position:absolute; top: 50%; left:50%;
+    transform: translate(-50%,-50%);
+    width: 56px; height: 56px; border-radius: 50%;
+    background: var(--paper);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+  .ba-handle::after{
+    content:"⇆"; position:absolute; top: 50%; left:50%;
+    transform: translate(-50%,-50%);
+    font-size: 20px; color: var(--bg);
+    font-weight: 700;
+  }
+
+  /* Frequency tuner — interactive scroll-driven knob */
+  .tuner{
+    position:relative; aspect-ratio: 1;
+    max-width: 480px; margin: 0 auto;
+  }
+  .tuner canvas{width:100%; height:100%; display:block;}
+  .tuner .readout{
+    position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    pointer-events:none; text-align:center;
+  }
+  .tuner .hz{
+    font-family:"Newsreader", serif; font-weight:300;
+    font-size: clamp(48px, 6vw, 80px); color: var(--paper);
+    letter-spacing:-0.02em;
+  }
+  .tuner .hz em{color: var(--accent-2); font-style: italic;}
+  .tuner .name{
+    font-family:"JetBrains Mono", monospace; font-size:11px;
+    letter-spacing:0.24em; text-transform:uppercase; color: var(--ink-dim);
+    margin-top: 12px; max-width: 240px;
+  }
+
+  /* Marquee ticker */
+  .marquee{
+    overflow: hidden; border-top:1px solid var(--rule); border-bottom:1px solid var(--rule);
+    padding: 32px 0;
+  }
+  .marquee-track{
+    display:flex; gap: 64px; white-space:nowrap;
+    animation: marquee 40s linear infinite;
+    font-family:"Newsreader", serif; font-style: italic; font-weight: 300;
+    font-size: clamp(32px, 4vw, 56px); color: var(--ink-soft);
+  }
+  .marquee-track span{display:inline-flex; align-items:center; gap: 64px;}
+  .marquee-track .dot{width: 8px; height:8px; border-radius:50%; background: var(--accent);}
+  [data-quiet="true"] .marquee-track{animation-duration: 120s;}
+  @keyframes marquee{to{transform: translateX(-50%);}}
+
+  /* Hover lift on cards (magnetic feel) */
+  .offer-card{will-change: transform;}
+  .offer-card:hover{transform: translateY(-6px);}
+
+  /* Event row sweep */
+  .event-row{position: relative; overflow:hidden;}
+  .event-row::before{
+    content:""; position:absolute; left:-100%; top:0; bottom:0; width: 100%;
+    background: linear-gradient(90deg, transparent, rgba(194,97,58,0.08), transparent);
+    transition: left .9s cubic-bezier(.2,.7,.2,1);
+    pointer-events:none;
+  }
+  .event-row:hover::before{left:100%;}
+
+  /* Ripple on click */
+  .ripple{position:absolute; border-radius:50%; background: rgba(239,228,210,0.15); transform: scale(0); animation: rippleAnim .7s ease-out forwards; pointer-events:none;}
+  @keyframes rippleAnim{to{transform: scale(3); opacity:0;}}
+
+  /* Side rail: section label */
+  .side-rail{
+    position: fixed; right: 24px; top: 50%; transform: translateY(-50%);
+    z-index: 40; display:flex; flex-direction:column; gap: 14px; align-items:flex-end;
+    font-family:"JetBrains Mono", monospace; font-size:10px;
+    letter-spacing:0.24em; text-transform:uppercase; color: var(--ink-dim);
+  }
+  .side-rail a{
+    display:flex; align-items:center; gap: 10px; text-decoration:none;
+    color: var(--ink-dim); transition: color .3s;
+  }
+  .side-rail a::after{
+    content:""; width: 18px; height:1px; background: currentColor;
+    transition: width .3s, background .3s;
+  }
+  .side-rail a.active{color: var(--paper);}
+  .side-rail a.active::after{width: 38px; background: var(--accent-2);}
+  .side-rail a:hover{color: var(--paper);}
+  @media (max-width: 1100px){.side-rail{display:none;}}
+
+  /* Floating booking handle */
+  .floater{
+    position: fixed; bottom: 24px; right: 24px; z-index: 150;
+    display:flex; align-items:center; gap: 10px;
+    background: var(--accent); color: #fff;
+    border: none; border-radius: 999px;
+    padding: 14px 24px;
+    font-family:"JetBrains Mono", monospace; font-size:11px;
+    letter-spacing:0.24em; text-transform:uppercase;
+    cursor: pointer; text-decoration:none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    animation: floaterPulse 3.5s ease infinite;
+  }
+  .floater:hover{background: var(--accent-2);}
+  @keyframes floaterPulse{
+    0%,100%{box-shadow: 0 10px 30px rgba(0,0,0,0.3), 0 0 0 0 var(--accent);}
+    55%{box-shadow: 0 10px 30px rgba(0,0,0,0.3), 0 0 0 16px rgba(0,0,0,0);}
+  }
+  .floater .glyph{font-size:14px;}
+
+  /* Lightbox for gallery */
+  .gallery{display:grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 60px;}
+  .gallery .tile{
+    aspect-ratio: 1; cursor: zoom-in;
+    border: 1px solid var(--rule);
+    overflow: hidden;
+    position: relative;
+    transition: transform .5s cubic-bezier(.2,.7,.2,1), border-color .3s;
+  }
+  .gallery .tile img{
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform .6s cubic-bezier(.2,.7,.2,1);
+  }
+  .gallery .tile:hover{border-color: var(--accent);}
+  .gallery .tile:hover img{transform: scale(1.08);}
+  .gallery .tile:nth-child(1){grid-column: span 2; grid-row: span 2; aspect-ratio: auto;}
+  .gallery .tile .overlay{
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(10,6,4,0.7) 0%, transparent 50%);
+    opacity: 0; transition: opacity .4s ease;
+    display: flex; align-items: flex-end; padding: 16px;
+    font-family:"JetBrains Mono", monospace; font-size:10px;
+    letter-spacing:0.2em; text-transform:uppercase; color: var(--paper);
+  }
+  .gallery .tile:hover .overlay{opacity: 1;}
+  @media(max-width:820px){.gallery{grid-template-columns: repeat(2,1fr);} .gallery .tile:nth-child(1){grid-column: span 2; grid-row: auto;}}
+
+  /* Image Strip - horizontal scroll */
+  .image-strip{
+    overflow: hidden;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    padding: 0;
+    position: relative;
+  }
+  .image-strip-track{
+    display: flex;
+    gap: 0;
+    animation: imageStripScroll 35s linear infinite;
+    width: max-content;
+  }
+  .image-strip-track:hover{animation-play-state: paused;}
+  .image-strip .strip-img{
+    height: 280px;
+    width: auto;
+    flex-shrink: 0;
+    object-fit: cover;
+    filter: grayscale(30%) contrast(1.1);
+    transition: filter .4s ease;
+  }
+  .image-strip .strip-img:hover{filter: grayscale(0%) contrast(1);}
+  @keyframes imageStripScroll{
+    0%{transform: translateX(0);}
+    100%{transform: translateX(-50%);}
+  }
+  @media(max-width:820px){.image-strip .strip-img{height: 180px;}}
+
+  /* Event thumbnails */
+  .event-row .event-thumb{
+    width: 72px; height: 72px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--rule);
+    flex-shrink: 0;
+    transition: border-color .3s;
+  }
+  .event-row:hover .event-thumb{border-color: var(--accent);}
+  .event-row .event-thumb img{
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: grayscale(40%);
+    transition: filter .4s ease, transform .4s ease;
+  }
+  .event-row:hover .event-thumb img{filter: grayscale(0%); transform: scale(1.1);}
+
+  .lightbox{
+    position: fixed; inset:0; background: rgba(12,8,5,0.92);
+    backdrop-filter: blur(20px);
+    display:none; align-items:center; justify-content:center;
+    z-index: 400; padding: 40px;
+    animation: fadeIn .3s ease;
+  }
+  .lightbox.open{display:flex;}
+  .lightbox .content{
+    max-width: 900px; max-height: 80vh;
+    border: 1px solid var(--accent);
+    overflow: hidden;
+  }
+  .lightbox .content img{
+    width: 100%; height: 100%;
+    object-fit: contain;
+  }
+  .lightbox-close{
+    position: fixed; top:24px; right:24px;
+    width: 48px; height: 48px; border-radius: 50%;
+    border: 1px solid var(--paper); background: transparent; color: var(--paper);
+    font-size: 20px; cursor: pointer;
+    transition: background .3s, color .3s;
+  }
+  .lightbox-close:hover{background: var(--paper); color: var(--bg);}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+  /* === Hero CTA row + trust === */
+  .hero-cta-row{display:flex; gap:16px; justify-content:center; margin-top: 36px; flex-wrap:wrap;}
+  .hero-cta-row .arrow{display:inline-block; transition:transform .25s;}
+  .hero-cta-row .btn:hover .arrow{transform: translateX(4px);}
+  .hero-trust{
+    margin-top: 36px; color: var(--ink-dim);
+    font-size:11px; letter-spacing:0.2em; text-transform:uppercase;
+    display:inline-flex; gap:16px; flex-wrap:wrap; justify-content:center;
+  }
+  .hero-trust b{color: var(--accent-2); font-weight:400;}
+
+  /* Hero Julia portrait circle */
+  .hero-julia{
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-julia img{
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center 20%;
+    border: 2px solid rgba(239,228,210,0.25);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    transition: transform .4s ease, border-color .4s ease;
+  }
+  .hero-julia:hover img{
+    transform: scale(1.05);
+    border-color: var(--accent-2);
+  }
+  .hero-julia-name{
+    font-family: "Newsreader", serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--ink-soft);
+    letter-spacing: 0.02em;
+  }
+
+  /* Breathing indicator — subtle bottom-right */
+  .breath{
+    position: absolute; bottom: 140px; right: 48px; z-index: 3;
+    display:flex; flex-direction:column; align-items:center; gap: 10px;
+    pointer-events:none;
+  }
+  .breath .ring{
+    width: 56px; height: 56px; border-radius: 50%;
+    border: 1px solid var(--accent-2);
+    animation: breathe 11s ease-in-out infinite;
+    position: relative;
+  }
+  .breath .ring::before{
+    content:""; position:absolute; inset:0; border-radius:50%;
+    background: radial-gradient(circle, rgba(224,160,84,0.2) 0%, transparent 70%);
+    animation: breathe 11s ease-in-out infinite;
+  }
+  .breath .label{
+    font-family:"JetBrains Mono", monospace; font-size:9px;
+    letter-spacing:0.3em; text-transform:uppercase; color: var(--ink-dim);
+  }
+  @keyframes breathe{
+    0%,100%{transform: scale(0.65); opacity: 0.4;}
+    40%{transform: scale(1.1); opacity: 1;}
+    55%{transform: scale(1.1); opacity: 1;}
+  }
+  [data-quiet="true"] .breath{opacity: 0.3;}
+  @media (max-width:820px){.breath{display:none;}}
+
+  /* Gong click hint */
+  .gong-hint{
+    position:absolute; top: 48%; left: 50%;
+    transform: translate(-50%, 0);
+    font-family:"JetBrains Mono", monospace; font-size:10px;
+    letter-spacing:0.3em; text-transform:uppercase; color: var(--ink-dim);
+    pointer-events:none;
+    opacity: 0; animation: hintFade 3s ease 4.5s forwards;
+    text-align:center;
+  }
+  .gong-hint .dot{display:inline-block; width:6px; height:6px; background: var(--accent-2); border-radius:50%; margin: 0 8px; vertical-align:middle; animation: hintPulse 2s ease infinite;}
+  @keyframes hintFade{0%{opacity:0}50%{opacity:0.8}100%{opacity:0.6}}
+  @keyframes hintPulse{0%,100%{transform:scale(1); opacity:1}50%{transform:scale(1.5); opacity:0.5}}
+
+  /* === Sticky event bar === */
+  .sticky-event{
+    position: fixed; bottom: 0; left:0; right:0; z-index: 70;
+    display:flex; align-items:center; gap: 24px; padding: 12px 36px;
+    background: rgba(58, 38, 28, 0.94);
+    backdrop-filter: blur(14px) saturate(1.1);
+    -webkit-backdrop-filter: blur(14px) saturate(1.1);
+    border-top: 1px solid rgba(239,228,210,0.18);
+    transform: translateY(100%);
+    transition: transform .6s cubic-bezier(.22,.68,.22,1);
+    font-size: 13px; color: var(--paper);
+  }
+  .sticky-event.show{transform: translateY(0);}
+  .sticky-portrait{
+    width: 40px; height: 40px; border-radius: 50%;
+    object-fit: cover; object-position: center 30%;
+    border: 1px solid rgba(239,228,210,0.25);
+    flex-shrink: 0;
+  }
+
+  /* === Julia portrait frame (About) === */
+  .julia-portrait-frame{
+    position: relative;
+    aspect-ratio: 4/5;
+    overflow: hidden;
+    border: 1px solid var(--rule);
+  }
+  .julia-portrait-frame img{
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center 20%;
+    display: block;
+  }
+  .julia-portrait-frame::after{
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 65%, rgba(10,6,4,0.35) 100%);
+    pointer-events: none;
+  }
+
+  /* === Hero Julia accent === */
+  .hero-portrait{
+    position: absolute; bottom: 60px; left: 48px;
+    width: 88px; height: 112px;
+    border: 1px solid rgba(239,228,210,0.18);
+    overflow: hidden;
+    z-index: 3;
+    opacity: 0;
+    animation: heroPortraitIn 1.2s cubic-bezier(.22,.68,.22,1) 5.4s forwards;
+  }
+  .hero-portrait img{
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center 25%;
+  }
+  @keyframes heroPortraitIn{
+    from{opacity:0; transform: translateY(12px);}
+    to{opacity:0.92; transform: translateY(0);}
+  }
+  @media (max-width: 820px){
+    .hero-portrait{display:none;}
+  }
+  .sticky-event .mono{font-size:10px; letter-spacing:0.24em; text-transform:uppercase; color: var(--ink-dim); display:inline-flex; align-items:center; gap:8px;}
+  .sticky-event .serif{font-family:"Newsreader", serif; font-weight:300; font-size:16px; flex:1;}
+  .sticky-event .spots{color: var(--accent-2); font-size:10px; letter-spacing:0.2em; text-transform:uppercase;}
+  .sticky-event .btn{padding:10px 20px; font-size:10px;}
+  .live-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 0 var(--accent);animation: liveDot 1.5s ease infinite;}
+  @keyframes liveDot{0%,100%{box-shadow:0 0 0 0 var(--accent);}50%{box-shadow:0 0 0 8px rgba(194,97,58,0);}}
+  @media (max-width:820px){.sticky-event{padding:10px 16px; gap:12px;}.sticky-event .mono{display:none;}.sticky-event .spots{display:none;}}
+
+  /* === Problem === */
+  .problem-section{padding: 180px 36px; text-align:center;}
+  .mirror-lede{
+    font-family:"Newsreader", serif; font-weight:300;
+    font-size: clamp(32px, 4vw, 52px);
+    line-height: 1.35; color: var(--paper);
+    max-width: 780px; margin: 0 auto 48px;
+  }
+  .mirror-punch{
+    font-family:"Newsreader", serif; font-weight:300;
+    font-size: clamp(24px, 2.5vw, 32px);
+    line-height: 1.4; color: var(--ink-soft);
+    max-width: 620px; margin: 0 auto;
+  }
+  .mirror-punch em{font-style:italic; color: var(--accent-2);}
+
+  /* === Resilience === */
+  .resilience{background: var(--bg-2); border-top:1px solid var(--rule); border-bottom:1px solid var(--rule);}
+  .resilience-grid{display:grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items:start;}
+  @media(max-width:960px){.resilience-grid{grid-template-columns:1fr; gap:48px;}}
+  .resilience-evidence{display:flex; flex-direction:column; gap: 16px;}
+  .evidence-card{
+    padding: 28px; border:1px solid var(--rule);
+    background: rgba(0,0,0,0.2);
+    transition: border-color .3s, transform .4s cubic-bezier(.2,.7,.2,1);
+  }
+  .evidence-card:hover{border-color: var(--accent); transform: translateX(4px);}
+  .evidence-card .evi-num{font-size:10px; letter-spacing:.24em; color: var(--accent-2); margin-bottom: 12px;}
+  .evidence-card h4{font-size:22px; font-weight:400; color:var(--paper); margin:0 0 10px;}
+  .evidence-card p{font-size:14.5px; color: var(--ink-soft); margin:0; line-height:1.6;}
+  .julia-badge{
+    margin-top: 40px; display:inline-flex; align-items:center; gap:10px;
+    padding: 12px 20px; border:1px solid var(--rule); border-radius:999px;
+    font-size:10px; letter-spacing:.24em; text-transform:uppercase; color: var(--ink-soft);
+  }
+  .julia-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--accent-2);}
+
+  /* === Timeline === */
+  .timeline-section{background: var(--bg);}
+  .timeline-layout{
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 64px;
+    align-items: start;
+  }
+  .timeline{position:relative; padding-left: 32px;}
+  .timeline-rail{position:absolute; left: 120px; top: 0; bottom: 0; width:1px; background: var(--rule);}
+  .timeline-step{
+    display:grid; grid-template-columns: 120px 40px 1fr; gap: 24px;
+    padding: 32px 0; align-items:start;
+  }
+  .timeline-time{font-size:13px; letter-spacing:.2em; color: var(--accent-2); padding-top: 4px;}
+  .timeline-node{width:12px; height:12px; border-radius:50%; background: var(--accent); margin: 8px auto; position: relative; z-index:2;}
+  .timeline-node::after{content:""; position:absolute; inset:-8px; border-radius:50%; border:1px solid var(--accent); opacity:.3;}
+  .timeline-body h4{font-family:"Newsreader", serif; font-size:28px; font-weight:300; color: var(--paper); margin:0 0 8px;}
+  .timeline-body p{color: var(--ink-soft); margin:0; max-width: 520px;}
+  .timeline-image{
+    position: sticky;
+    top: 120px;
+    border: 1px solid var(--rule);
+    overflow: hidden;
+    aspect-ratio: 3/4;
+  }
+  .timeline-image img{
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: grayscale(20%) contrast(1.05);
+    transition: filter .6s ease;
+  }
+  .timeline-image:hover img{filter: grayscale(0%) contrast(1);}
+  .timeline-image::after{
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(10,6,4,0.4) 0%, transparent 40%);
+    pointer-events: none;
+  }
+  @media(max-width:960px){
+    .timeline-layout{grid-template-columns: 1fr; gap: 48px;}
+    .timeline-image{position: relative; top: 0; max-width: 100%; aspect-ratio: 16/9;}
+  }
+  @media(max-width:820px){
+    .timeline-rail{left: 0;}
+    .timeline{padding-left:24px;}
+    .timeline-step{grid-template-columns: 1fr; gap:8px; padding-left: 32px; position:relative;}
+    .timeline-step .timeline-node{position:absolute; left: -12px; top: 8px;}
+  }
+
+  /* === FAQ === */
+  .faq-list{border-top: 1px solid var(--rule);}
+  .faq-item{border-bottom: 1px solid var(--rule); padding: 24px 0; cursor:pointer; transition: background .3s;}
+  .faq-head{display:flex; justify-content:space-between; align-items:center; gap:24px;}
+  .faq-item h4{font-family:"Newsreader", serif; font-size:22px; font-weight:400; color: var(--paper); margin:0; transition: color .3s;}
+  .faq-item:hover h4{color: var(--accent-2);}
+  .faq-plus{font-family:"Newsreader", serif; font-size:28px; color: var(--accent-2); font-weight:300; transition: transform .4s;}
+  .faq-item.open .faq-plus{transform: rotate(180deg);}
+  .faq-body{max-height: 0; overflow:hidden; transition: max-height .5s cubic-bezier(.2,.7,.2,1);}
+  .faq-item.open .faq-body{max-height: 320px;}
+  .faq-body p{color: var(--ink-soft); margin: 20px 0 0; max-width: 680px; font-size:16px;}
+
+  /* === Final CTA === */
+  .final-cta{
+    padding: 160px 36px;
+    background: radial-gradient(ellipse at 50% 30%, rgba(194,97,58,0.18) 0%, var(--bg) 70%);
+    text-align:center; position:relative; overflow:hidden;
+  }
+  .final-cta::before{
+    content:""; position:absolute; inset:0;
+    background-image: radial-gradient(circle at 50% 50%, transparent 60%, var(--bg) 100%);
+    pointer-events:none;
+  }
+  .final-inner{position:relative; z-index:2; max-width: 1000px; margin:0 auto;}
+  .final-cta .eyebrow{justify-content:center;}
+  .final-cta h2.display{text-align:center; margin-left:auto; margin-right:auto;}
+  .final-cta .lede{margin-left:auto; margin-right:auto; text-align:center;}
+  .final-next{
+    margin-top: 72px; padding: 40px;
+    background: rgba(0,0,0,0.3); border:1px solid var(--rule);
+    display:flex; justify-content:space-between; align-items:center; gap:40px; flex-wrap:wrap;
+    text-align:left;
+  }
+  .final-cta-row{display:flex; gap:16px; flex-wrap:wrap;}
+  @media(max-width:820px){.final-next{flex-direction:column; text-align:center;}.final-cta-row{justify-content:center;}}
+
+
+</style>
+</head>
+<body>
+  <div class="scroll-progress" id="scroll-progress"></div>
+  <div class="cursor-ring" id="cursor-ring" aria-hidden="true"></div>
+  <div class="cursor-dot" id="cursor-dot" aria-hidden="true"></div>
+
+  <div id="app"></div>
+
+  <!-- Duotone filter: shadows → espresso, highlights → terracotta/paper -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <filter id="duotone-julia" colorInterpolationFilters="sRGB">
+        <feColorMatrix type="matrix"
+          values="0.33 0.33 0.33 0 0
+                  0.33 0.33 0.33 0 0
+                  0.33 0.33 0.33 0 0
+                  0    0    0    1 0"/>
+        <feComponentTransfer>
+          <feFuncR tableValues="0.102 0.761"/>
+          <feFuncG tableValues="0.071 0.380"/>
+          <feFuncB tableValues="0.055 0.227"/>
+        </feComponentTransfer>
+      </filter>
+    </defs>
+  </svg>
+
+
+  <!-- Tweaks defaults -->
+  <script>
+  const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+    "palette": "espresso"
+  }/*EDITMODE-END*/;
+  </script>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+
+  <script type="text/babel">
+// Gong Canvas: concentric ripples, organic strike animation, mouse-reactive.
+// Exports GongCanvas + SoundViz to window.
+
+const { useEffect, useRef, useState } = React;
+
+function hexToRgb(h){
+  const c = getComputedStyle(document.documentElement).getPropertyValue(h).trim();
+  const m = c.replace('#','');
+  return [parseInt(m.substring(0,2),16), parseInt(m.substring(2,4),16), parseInt(m.substring(4,6),16)];
+}
+
+function GongCanvas(){
+  const ref = useRef(null);
+  const stateRef = useRef({ ripples: [], mouse: {x:0.5, y:0.5}, scroll:0, last: 0, auto: 0 });
+
+  useEffect(()=>{
+    const cvs = ref.current;
+    const ctx = cvs.getContext('2d');
+    let raf;
+    let dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    function resize(){
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      cvs.width = cvs.offsetWidth * dpr;
+      cvs.height = cvs.offsetHeight * dpr;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    function onMove(e){
+      const r = cvs.getBoundingClientRect();
+      stateRef.current.mouse = {
+        x: (e.clientX - r.left) / r.width,
+        y: (e.clientY - r.top) / r.height,
+      };
+    }
+    function onClick(e){
+      const r = cvs.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width;
+      const y = (e.clientY - r.top) / r.height;
+      stateRef.current.ripples.push({ x, y, t: 0, strength: 1.4 });
+    }
+    function onScroll(){
+      stateRef.current.scroll = window.scrollY;
+    }
+    window.addEventListener('mousemove', onMove);
+    cvs.addEventListener('click', onClick);
+    window.addEventListener('scroll', onScroll, { passive:true });
+
+    stateRef.current.ripples.push({ x: 0.5, y: 0.5, t: 0, strength: 1 });
+
+    function draw(t){
+      const s = stateRef.current;
+      const dt = Math.min(0.05, (t - s.last)/1000 || 0.016);
+      s.last = t;
+      s.auto += dt;
+      if (s.auto > 14){
+        s.auto = 0;
+        s.ripples.push({ x: 0.5, y: 0.5, t: 0, strength: 1.4 });
+      }
+
+      const w = cvs.width, h = cvs.height;
+      const cx = w*0.5, cy = h*0.5;
+
+      const bg = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
+      ctx.fillStyle = bg;
+      ctx.fillRect(0,0,w,h);
+
+      const gradBg = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(w,h)*0.7);
+      gradBg.addColorStop(0, 'rgba(194,97,58,0.08)');
+      gradBg.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = gradBg;
+      ctx.fillRect(0,0,w,h);
+
+      ctx.globalAlpha = 0.06;
+      ctx.fillStyle = '#efe4d2';
+      for (let i=0;i<40;i++){
+        const rx = (Math.sin(i*12.9898 + t*0.0001)*0.5+0.5)*w;
+        const ry = (Math.cos(i*78.233 + t*0.0001)*0.5+0.5)*h;
+        ctx.beginPath(); ctx.arc(rx, ry, 1.2*dpr, 0, Math.PI*2); ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+
+      const scrollK = Math.min(1, s.scroll / 900);
+      const gongScale = 1 - scrollK * 0.25;
+      const parallaxY = -scrollK * 80 * dpr;
+
+      const mx = (s.mouse.x - 0.5) * 20 * dpr;
+      const my = (s.mouse.y - 0.5) * 20 * dpr;
+
+      const baseR = Math.min(w, h) * 0.24 * gongScale;
+
+      ctx.save();
+      ctx.translate(cx + mx*0.3, cy + my*0.3 + parallaxY);
+
+      const discGrad = ctx.createRadialGradient(-baseR*0.3, -baseR*0.3, baseR*0.1, 0, 0, baseR);
+      discGrad.addColorStop(0, 'rgba(224,160,84,0.25)');
+      discGrad.addColorStop(0.35, 'rgba(139, 65, 30, 0.35)');
+      discGrad.addColorStop(1, 'rgba(12, 8, 6, 0.85)');
+      ctx.fillStyle = discGrad;
+      ctx.beginPath(); ctx.arc(0,0,baseR,0,Math.PI*2); ctx.fill();
+
+      ctx.strokeStyle = 'rgba(239,228,210,0.10)';
+      ctx.lineWidth = 1*dpr;
+      for (let i=1;i<8;i++){
+        ctx.beginPath(); ctx.arc(0,0, baseR*(i/8), 0, Math.PI*2); ctx.stroke();
+      }
+      ctx.fillStyle = 'rgba(194,97,58,0.6)';
+      ctx.beginPath(); ctx.arc(0,0, baseR*0.12, 0, Math.PI*2); ctx.fill();
+
+      ctx.restore();
+
+      for (let i = s.ripples.length-1; i>=0; i--){
+        const r = s.ripples[i];
+        r.t += dt;
+        const progress = r.t / 14;
+        if (progress > 1){ s.ripples.splice(i,1); continue; }
+        const ease = 1 - Math.pow(1-progress, 3);
+        const radius = baseR + ease * Math.max(w,h) * 0.8;
+        const alpha = (1 - progress) * 0.5 * r.strength;
+        const ox = (r.x - 0.5) * w + mx*0.3;
+        const oy = (r.y - 0.5) * h + my*0.3 + parallaxY;
+
+        for (let k=0; k<5; k++){
+          const rad = radius - k * 18 * dpr;
+          if (rad < baseR) continue;
+          ctx.strokeStyle = `rgba(224,160,84,${alpha * (1 - k*0.18)})`;
+          ctx.lineWidth = (1.2 - k*0.15) * dpr;
+          ctx.beginPath();
+          ctx.arc(cx + ox, cy + oy, rad, 0, Math.PI*2);
+          ctx.stroke();
+        }
+      }
+
+      {
+        const mxp = s.mouse.x * w, myp = s.mouse.y * h;
+        const dist = Math.hypot(mxp - cx, myp - cy);
+        if (dist > baseR * 0.8){
+          ctx.strokeStyle = 'rgba(239,228,210,0.07)';
+          ctx.lineWidth = 1*dpr;
+          ctx.beginPath(); ctx.arc(mxp, myp, 80*dpr, 0, Math.PI*2); ctx.stroke();
+          ctx.beginPath(); ctx.arc(mxp, myp, 140*dpr, 0, Math.PI*2); ctx.stroke();
+        }
+      }
+
+      raf = requestAnimationFrame(draw);
+    }
+    raf = requestAnimationFrame(draw);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('resize', resize);
+      window.removeEventListener('mousemove', onMove);
+      cvs.removeEventListener('click', onClick);
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, []);
+
+  return <canvas id="gong-canvas" ref={ref} aria-hidden="true" />;
+}
+
+function SoundViz({ playing }){
+  const ref = useRef(null);
+  useEffect(()=>{
+    const cvs = ref.current;
+    const ctx = cvs.getContext('2d');
+    let raf, dpr = Math.min(window.devicePixelRatio||1, 2);
+    function resize(){
+      dpr = Math.min(window.devicePixelRatio||1, 2);
+      cvs.width = cvs.offsetWidth * dpr;
+      cvs.height = cvs.offsetHeight * dpr;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    let t = 0;
+    function draw(){
+      t += playing ? 0.015 : 0.003;
+      const w = cvs.width, h = cvs.height;
+      const cx = w/2, cy = h/2;
+      ctx.clearRect(0,0,w,h);
+
+      const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+      const accent2 = getComputedStyle(document.documentElement).getPropertyValue('--accent-2').trim();
+
+      ctx.strokeStyle = 'rgba(239,228,210,0.08)';
+      ctx.lineWidth = 1*dpr;
+      ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(w, cy); ctx.stroke();
+
+      const layers = 5;
+      for (let l=0; l<layers; l++){
+        ctx.beginPath();
+        const amp = (playing ? 40 : 12) * dpr * (1 - l*0.15);
+        const freq = 0.006 + l * 0.003;
+        const phase = t * (1 + l*0.3);
+        for (let x=0; x<=w; x += 2*dpr){
+          const y = cy
+            + Math.sin(x * freq + phase) * amp
+            + Math.sin(x * freq * 2.3 + phase*1.7) * amp * 0.3;
+          if (x === 0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+        }
+        const alpha = 0.5 - l*0.08;
+        ctx.strokeStyle = l % 2 === 0
+          ? `rgba(${hex(accent)}, ${alpha})`
+          : `rgba(${hex(accent2)}, ${alpha})`;
+        ctx.lineWidth = (1.5 - l*0.2) * dpr;
+        ctx.stroke();
+      }
+
+      raf = requestAnimationFrame(draw);
+    }
+    function hex(c){
+      const m = c.replace('#','');
+      return `${parseInt(m.substring(0,2),16)},${parseInt(m.substring(2,4),16)},${parseInt(m.substring(4,6),16)}`;
+    }
+    draw();
+    return () => { cancelAnimationFrame(raf); window.removeEventListener('resize', resize); };
+  }, [playing]);
+
+  return <canvas ref={ref} className="viz" />;
+}
+
+window.GongCanvas = GongCanvas;
+window.SoundViz = SoundViz;
+
+// =============== NAV ===============
+function Nav(){
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener('scroll', onScroll, { passive:true });
+    onScroll();
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+  return (
+    <nav className={`top ${scrolled ? 'scrolled' : ''}`}>
+      <div className="brand"><b>GONG</b> <em>frequencies</em></div>
+      <ul>
+        <li><a href="#intro">Klang</a></li>
+        <li><a href="#angebote">Angebote</a></li>
+        <li><a href="#events">Events</a></li>
+        <li><a href="#player">Erleben</a></li>
+        <li><a href="#kontakt">Kontakt</a></li>
+      </ul>
+    </nav>
+  );
+}
+
+// =============== STICKY EVENT BAR ===============
+function StickyEventBar({ event }){
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    function onScroll(){
+      const y = window.scrollY;
+      const h = window.innerHeight;
+      const events = document.getElementById('events');
+      const eventsTop = events ? events.getBoundingClientRect().top + window.scrollY : 9999;
+      const final = document.getElementById('final');
+      const finalTop = final ? final.getBoundingClientRect().top + window.scrollY : 99999;
+      setShow(y > h*0.6 && y < eventsTop - h*0.3 || (y > eventsTop + 400 && y < finalTop - h));
+    }
+    window.addEventListener('scroll', onScroll, { passive:true });
+    onScroll();
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+  return (
+    <div className={`sticky-event ${show ? 'show':''}`}>
+      <img src="assets/julia-portrait.jpg" alt="Julia" className="sticky-portrait" />
+      <div className="mono"><span className="live-dot"></span> Nächster Klang</div>
+      <div className="serif"><b>{event.d}. {event.m}</b> · {event.loc}</div>
+      <div className="mono spots">{event.spots}</div>
+      <a href="#events" className="btn pulse magnet" data-cursor="big">Platz sichern →</a>
+    </div>
+  );
+}
+
+// =============== WORD REVEAL ===============
+function WordReveal({ lines, delay=400, wordStagger=90, lineGap=220, className, italicLine }){
+  return (
+    <span className={className}>
+      {lines.map((ln, li) => {
+        const words = ln.split(' ');
+        return (
+          <span key={li} style={{display:'block'}}>
+            {words.map((w, wi) => {
+              const d = delay + li*lineGap + wi*wordStagger;
+              return (
+                <span key={wi} style={{
+                  display:'inline-block',
+                  overflow:'hidden',
+                  verticalAlign:'top',
+                  marginRight: '0.28em',
+                }}>
+                  <span style={{
+                    display:'inline-block',
+                    opacity: 0,
+                    transform: 'translateY(110%)',
+                    animation: `wordUp 1.1s cubic-bezier(.2,.7,.2,1) ${d}ms forwards`,
+                    fontStyle: italicLine===li ? 'italic' : 'normal',
+                    color: italicLine===li ? 'var(--accent-2)' : 'inherit',
+                  }}>{w}</span>
+                </span>
+              );
+            })}
+          </span>
+        );
+      })}
+    </span>
+  );
+}
+
+// =============== COUNT UP HOOK ===============
+function useCountUp(target, trigger, duration=1800){
+  const [val, setVal] = useState(0);
+  useEffect(() => {
+    if (!trigger) return;
+    let raf, start;
+    const from = 0;
+    function step(t){
+      if (!start) start = t;
+      const p = Math.min(1, (t - start)/duration);
+      const eased = 1 - Math.pow(1-p, 3);
+      setVal(from + (target - from) * eased);
+      if (p < 1) raf = requestAnimationFrame(step);
+    }
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [target, trigger, duration]);
+  return val;
+}
+
+// =============== HERO ===============
+function Hero({ nextEvent }){
+  const [sub, setSub] = useState(false);
+  const [cta, setCta] = useState(false);
+  const [trust, setTrust] = useState(false);
+  useEffect(() => {
+    const t1 = setTimeout(()=>setSub(true), 1000);
+    const t2 = setTimeout(()=>setCta(true), 3200);
+    const t3 = setTimeout(()=>setTrust(true), 4200);
+    return ()=>{ clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+  }, []);
+  const tpart = useCountUp(400, trust, 1600);
+  const tpct  = useCountUp(98,  trust, 1600);
+  const tev   = useCountUp(36,  trust, 1600);
+  return (
+    <section className="hero" id="hero" data-screen-label="hero">
+      <GongCanvas />
+      <div className="hero-inner">
+        <h1 className="hero-title" style={{fontSize:'clamp(28px, 4.2vw, 62px)', lineHeight:1.3, fontWeight:300, letterSpacing:'-0.01em'}}>
+          <WordReveal
+            lines={["Oft hält der Körper Dinge fest,", "für die du keine Worte hast."]}
+            delay={300}
+            wordStagger={85}
+            lineGap={260}
+          />
+        </h1>
+        <div style={{opacity: sub ? 1 : 0, transform: sub ? 'none' : 'translateY(16px)', transition:'opacity 1s ease, transform 1s ease'}}>
+          <p className="hero-sub" style={{marginTop:36, fontSize:'clamp(17px, 1.5vw, 20px)', lineHeight:1.6, color:'var(--ink-soft)'}}>
+            <b style={{color:'var(--accent-2)', fontWeight:300, fontStyle:'italic', fontFamily:'Newsreader, serif', fontSize:'clamp(22px, 2.2vw, 32px)', lineHeight:1.35, display:'inline-block'}}>Du brauchst eine Pause, die tief genug geht.</b>
+          </p>
+        </div>
+        <div style={{opacity: cta ? 1 : 0, transform: cta ? 'none' : 'translateY(16px)', transition:'opacity 1s ease, transform 1s ease'}}>
+          <div className="hero-cta-row">
+            <a href="#events" className="btn pulse magnet" data-cursor="big">
+              Platz sichern · {nextEvent.d}. {nextEvent.m} <span className="arrow">→</span>
+            </a>
+            <a href="#intro" className="btn ghost magnet" data-cursor="big">Was ist ein Gong?</a>
+          </div>
+          <div className="hero-trust mono" style={{opacity: trust ? 1 : 0, transform: trust ? 'none' : 'translateY(8px)', transition:'opacity 1s ease, transform 1s ease'}}>
+            <span><b>{Math.round(tpart)}+</b> Teilnehmer:innen</span>
+            <span>·</span>
+            <span><b>{Math.round(tpct)}%</b> empfehlen weiter</span>
+            <span>·</span>
+            <span><b>{Math.round(tev)}</b> Klang-Abende 2025</span>
+          </div>
+          <div className="hero-julia" style={{opacity: trust ? 1 : 0, transform: trust ? 'none' : 'translateY(12px) scale(0.95)', transition:'opacity 1.2s ease 0.3s, transform 1.2s ease 0.3s'}}>
+            <img src="assets/julia2.jpg" alt="Julia Martyn" />
+            <span className="hero-julia-name">Julia Martyn</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// =============== INTRO ===============
+function Intro(){
+  return (
+    <section id="intro" data-screen-label="intro">
+      <div className="container">
+        <div className="intro-layout">
+          <div className="intro-content">
+            <div className="reveal">
+              <div className="eyebrow"><span className="dot"></span> 01 — Was ist ein Gong</div>
+              <h2 className="display">Kein Konzert.<br/>Eine <em>innere Massage.</em></h2>
+            </div>
+            <div className="reveal" data-delay="1">
+              <p className="lede serif" style={{marginBottom:24}}>
+                Du liegst. Du hörst nicht nur — du <em>spürst</em>.
+                Der Gong erzeugt hunderte Frequenzen gleichzeitig,
+                die durch Knochen, Gewebe und Wasser in dir wandern.
+              </p>
+              <p className="lede">
+                Was Meditation in 20 Minuten versucht, schafft der Gong
+                in wenigen Schlägen: dein Nervensystem kippt in den
+                Parasympathikus. Gedanken werden leiser,
+                nicht weil du sie wegdrückst — sondern weil der Klang
+                größer ist als sie.
+              </p>
+            </div>
+          </div>
+          <div className="intro-image reveal">
+            <img src="assets/Session1.jpg" alt="Gong mit Klangschalen" />
+          </div>
+        </div>
+
+        <div className="gong-facts reveal" data-delay="2">
+          <div className="gong-fact">
+            <div className="gong-fact-num">∿</div>
+            <div className="gong-fact-label">Obertöne</div>
+            <div className="gong-fact-text">
+              Ein einziger Schlag erzeugt dutzende Frequenzen gleichzeitig —
+              jede trifft eine andere Schicht in dir.
+            </div>
+          </div>
+          <div className="gong-fact">
+            <div className="gong-fact-num">~70%</div>
+            <div className="gong-fact-label">Wasser im Körper</div>
+            <div className="gong-fact-text">
+              Schall bewegt sich durch Flüssigkeit. Dein Körper wird zum
+              Resonanzraum — nicht zum Zuhörer.
+            </div>
+          </div>
+          <div className="gong-fact">
+            <div className="gong-fact-num">0</div>
+            <div className="gong-fact-label">Vorerfahrung nötig</div>
+            <div className="gong-fact-text">
+              Du musst nicht meditieren können. Du musst nichts
+              „richtig" machen. Liegen genügt.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// =============== RESILIENCE ===============
+function Resilience(){
+  return (
+    <section id="resilienz" className="resilience" data-screen-label="resilienz">
+      <div className="container">
+        <div className="reveal" style={{marginBottom:56, maxWidth: 760}}>
+          <div className="eyebrow"><span className="dot"></span> 02 — Klang trifft Resilienz</div>
+          <h2 className="display">Mehr als Entspannung.<br/><em>Training</em> fürs Nervensystem.</h2>
+        </div>
+        <div className="resilience-grid">
+          <div className="reveal resilience-poetic">
+            <p className="lede serif" style={{fontSize: 28, lineHeight: 1.4, color:'var(--paper)'}}>
+              Resilienz ist nicht Härte.
+            </p>
+            <p className="lede serif" style={{fontSize: 22, lineHeight: 1.5, marginTop: 24}}>
+              Resilienz ist die Fähigkeit deines Körpers,
+              aus Spannung wieder in Ruhe zu fallen —
+              immer und immer wieder.
+            </p>
+            <p className="lede" style={{marginTop: 32}}>
+              Der Gong ist kein Ausstieg. Er ist Übung.
+              Jedes Mal, wenn du tief sinkst,
+              lernt dein Nervensystem den Weg zurück.
+            </p>
+            <div className="julia-badge mono">
+              <span className="dot"></span>
+              Julia · Gong-Spielerin & Resilienztrainerin i. A.
+            </div>
+          </div>
+          <div className="resilience-evidence">
+            <div className="evidence-card reveal-x" data-delay="1">
+              <div className="evi-num mono">01</div>
+              <h4 className="serif">Vagusnerv aktiviert</h4>
+              <p>Tiefe Klangfrequenzen schalten dein System in den parasympathischen Modus. Herzrate sinkt. Atem wird tiefer. Der Körper darf heilen.</p>
+            </div>
+            <div className="evidence-card reveal-x" data-delay="2">
+              <div className="evi-num mono">02</div>
+              <h4 className="serif">Cortisol sinkt messbar</h4>
+              <p>Studien zeigen: nach 45–60 Minuten Klangarbeit ist das Stresshormon deutlich reduziert. Dein Körper nimmt wieder Ruhe als normal wahr.</p>
+            </div>
+            <div className="evidence-card reveal-x" data-delay="3">
+              <div className="evi-num mono">03</div>
+              <h4 className="serif">Ein neuer Set-Point</h4>
+              <p>Regelmäßigkeit schreibt neu. Dein Nervensystem lernt schneller in Balance zurückzufinden — im Job, im Konflikt, im Leben.</p>
+            </div>
+          </div>
+        </div>
+        <div className="reveal" style={{marginTop: 72, textAlign:'center'}}>
+          <a href="#angebote" className="btn pulse magnet" data-cursor="big">Finde deinen Weg zum Gong →</a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// =============== TIMELINE ===============
+function Timeline(){
+  const steps = [
+    { t:'00:00', title:'Ankommen', d:'Du liegst. Decke über dir. Die ersten Töne kommen von weit her.' },
+    { t:'00:05', title:'Loslassen', d:'Dein Atem findet von selbst einen tieferen Rhythmus. Der Kopf gibt nach.' },
+    { t:'00:15', title:'Durchdringen', d:'Die Frequenzen erreichen Schichten, zu denen Worte keinen Zugang haben.' },
+    { t:'00:30', title:'Tiefe', d:'Parasympathikus aktiv. Cortisol sinkt. Etwas weicht, das du lang getragen hast.' },
+    { t:'00:50', title:'Integration', d:'Der Klang ebbt ab. Du bleibst. Der Raum ist weit. Du bist weich.' },
+    { t:'01:00', title:'Zurückkommen', d:'Du öffnest die Augen. Nichts ist gelöst — und doch ist alles anders geordnet.' },
+  ];
+  return (
+    <section className="timeline-section" data-screen-label="timeline">
+      <div className="container">
+        <div className="reveal" style={{marginBottom:72, maxWidth: 640}}>
+          <div className="eyebrow"><span className="dot"></span> 03 — Was passiert in dir</div>
+          <h2 className="display">Eine Stunde,<br/>von <em>innen</em> betrachtet.</h2>
+        </div>
+        <div className="timeline-layout">
+          <div className="timeline">
+            <div className="timeline-rail"></div>
+            {steps.map((s, i) => (
+              <div key={i} className="timeline-step reveal" data-delay={Math.min(i,4)}>
+                <div className="timeline-time mono">{s.t}</div>
+                <div className="timeline-node"></div>
+                <div className="timeline-body">
+                  <h4 className="serif">{s.title}</h4>
+                  <p>{s.d}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="timeline-image reveal">
+            <img src="assets/session2.jpg" alt="Gong Session Atmosphäre" />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// =============== PILLARS ===============
+function Pillars(){
+  const items = [
+    { n: 'I',   t: 'Körper', d: 'Vibrationen lösen Verspannungen, regen den Lymphfluss an und versetzen das Nervensystem in Parasympathikus.' },
+    { n: 'II',  t: 'Geist',  d: 'Monotone Frequenzen stoppen das Gedankenkarussell und öffnen einen Raum meditativer Klarheit.' },
+    { n: 'III', t: 'Seele',  d: 'Der Klang führt dich zurück zu einer Ebene, auf der Worte nicht mehr gebraucht werden.' },
+  ];
+  return (
+    <section className="pillars-section" data-screen-label="drei-ebenen">
+      <div className="container">
+        <div className="pillars-head reveal">
+          <div className="eyebrow"><span className="dot"></span> Drei Ebenen</div>
+          <h2 className="display" style={{fontSize:'clamp(40px, 5vw, 72px)', maxWidth: 760}}>
+            Der Gong spricht <em>nicht</em> nur das Ohr an.
+          </h2>
+        </div>
+        <ol className="pillars-triptych">
+          {items.map((it, i) => (
+            <li key={it.n} className="pillar-row reveal-x" data-delay={i+1}>
+              <div className="pillar-roman">{it.n}</div>
+              <h3 className="pillar-title">{it.t}</h3>
+              <p className="pillar-desc">{it.d}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  );
+}
+
+// =============== OFFERINGS ===============
+function Offerings(){
+  const cards = [
+    {
+      tag: '01 · Einzel',
+      title: 'Sound Journey',
+      desc: 'Eine private Klangreise. Du liegst, ich spiele. Eine Stunde nur für dich und deinen Körper.',
+      list: [['Dauer','60 min'],['Setting','1:1'],['Ort','Olpe / mobil']],
+    },
+    {
+      tag: '02 · Gruppe',
+      title: 'Gong Bath',
+      desc: 'Ein Abend im Kreis. Du kommst zur Ruhe, der Gong trägt, du tauchst tief ein — und kehrst weich zurück.',
+      list: [['Dauer','60–75 min'],['Setting','Gruppe'],['Ort','Yoga-Studios']],
+    },
+    {
+      tag: '03 · Retreat',
+      title: 'Klangzeremonie',
+      desc: 'Für Retreats, Yoga-Wochenenden oder besondere Anlässe. Der Gong als Höhepunkt eures Programms.',
+      list: [['Dauer','individuell'],['Setting','Event'],['Ort','deutschlandweit']],
+    },
+    {
+      tag: '04 · Corporate',
+      title: 'Wellbeing Session',
+      desc: 'Für Teams, die wirklich durchatmen wollen. Eine Pause, die nachwirkt — in Meetings, Räumen, Menschen.',
+      list: [['Dauer','45–90 min'],['Setting','Team'],['Ort','vor Ort']],
+    },
+  ];
+  return (
+    <section id="angebote">
+      <div className="container">
+        <div style={{marginBottom:56}} className="reveal">
+          <div className="eyebrow"><span className="dot"></span> 02 — Angebote</div>
+          <h2 className="display">Vier Wege,<br/>in <em>Resonanz</em> zu gehen.</h2>
+        </div>
+        <div className="offerings">
+          {cards.map(c => (
+            <div key={c.tag} className="offer-card reveal">
+              <div className="decor"></div>
+              <div className="tag">{c.tag}</div>
+              <h3>{c.title}</h3>
+              <p>{c.desc}</p>
+              <ul>
+                {c.list.map(([k,v]) => (
+                  <li key={k}><span>{k}</span><span>{v}</span></li>
+                ))}
+              </ul>
+              <a className="btn ghost" href="#kontakt">Anfragen →</a>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// =============== EVENTS ===============
+const EVENTS = [
+  { id:'e1', d:'17', m:'APR', yr:'2026', title:'Gong Bath', who:'Yoga Studio Olpe · 19:00', loc:'Olpe', city:'Olpe', tag:'bath', price:'€ 28', spots:'8 / 20 frei', thumb:'uploads/Session1.jpg' },
+  { id:'e2', d:'02', m:'MAI', yr:'2026', title:'Klang & Kakao', who:'mit Tina · 17:00–18:30', loc:'Yogatraum Pulheim', city:'Pulheim', tag:'ritual', price:'€ 42', spots:'5 / 16 frei', thumb:'uploads/session2.jpg' },
+  { id:'e3', d:'15', m:'MAI', yr:'2026', title:'Sound Journey 1:1', who:'Einzelsession auf Termin', loc:'Privatraum Olpe', city:'Olpe', tag:'solo', price:'€ 90', spots:'nach Absprache', thumb:'uploads/gong.jpg' },
+  { id:'e4', d:'06', m:'JUN', yr:'2026', title:'Gong & Neumond', who:'Zeremonie · 20:00', loc:'Outdoor · Biggesee', city:'Olpe', tag:'ritual', price:'€ 38', spots:'12 / 24 frei', thumb:'uploads/Gong3.jpg' },
+  { id:'e5', d:'21', m:'JUN', yr:'2026', title:'Sommer-Sonnwend-Gong', who:'Sonderabend · 21:00', loc:'Yoga Studio Olpe', city:'Olpe', tag:'bath', price:'€ 32', spots:'ausverkauft', thumb:'uploads/session2.jpg' },
+];
+
+function Events({ onOpen }){
+  const [filter, setFilter] = useState('alle');
+  const shown = EVENTS.filter(e => filter === 'alle' || e.tag === filter);
+  return (
+    <section id="events">
+      <div className="container">
+        <div style={{marginBottom:48, display:'flex', justifyContent:'space-between', alignItems:'end', flexWrap:'wrap', gap:32}} className="reveal">
+          <div>
+            <div className="eyebrow"><span className="dot"></span> 03 — Events</div>
+            <h2 className="display">Der nächste <em>Klang.</em></h2>
+          </div>
+          <p className="lede" style={{maxWidth:380}}>
+            Alle kommenden Termine. Früh buchen lohnt sich — die Räume sind klein, die Plätze wenige.
+          </p>
+        </div>
+        <div className="events-filter reveal">
+          {[['alle','Alle'],['bath','Gong Bath'],['ritual','Ritual'],['solo','1:1']].map(([k,v]) => (
+            <button key={k} data-active={filter===k} onClick={()=>setFilter(k)}>{v}</button>
+          ))}
+        </div>
+        <div className="reveal">
+          {shown.map(e => (
+            <div className="event-row" key={e.id} onClick={()=>onOpen(e)}>
+              <div className="event-thumb">
+                <img src={e.thumb} alt={e.title} />
+              </div>
+              <div className="date">{e.d}<span className="mo">{e.m} {e.yr}</span></div>
+              <div className="title"><h4>{e.title}</h4><span>{e.who}</span></div>
+              <div className="loc"><small>Ort</small>{e.loc}</div>
+              <div className="arrow">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" strokeWidth="1.2"/></svg>
+              </div>
+            </div>
+          ))}
+          {shown.length === 0 && <p style={{padding:'40px 0', color:'var(--ink-dim)'}} className="mono">— keine Events in dieser Kategorie —</p>}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// =============== PLAYER ===============
+function Player(){
+  const [consent, setConsent] = useState(false);
+  const [playing, setPlaying] = useState(false);
+  const [track, setTrack] = useState(0);
+  const tracks = [
+    { t:'Opening Breath', dur:'02:14', freq:'136.1 Hz · Om' },
+    { t:'Ripple', dur:'04:42', freq:'174 Hz' },
+    { t:'Deep Immersion', dur:'07:08', freq:'528 Hz' },
+  ];
+
+  return (
+    <section id="player">
+      <div className="container">
+        <div style={{marginBottom:48}} className="reveal">
+          <div className="eyebrow"><span className="dot"></span> 04 — Vorgeschmack</div>
+          <h2 className="display">Hör <em>kurz</em> rein.</h2>
+          <p className="lede" style={{maxWidth:520}}>
+            Drei kurze Auszüge aus einer Klangreise — nicht ersetzend, nur andeutend.
+            Ein Sound Bath erlebst du am besten im Raum, liegend, mit geschlossenen Augen.
+          </p>
+        </div>
+
+        <div className="player reveal">
+          <div>
+            <SoundViz playing={playing && consent} />
+            <div className="controls">
+              <button className={`play ${playing && consent ? 'playing':''}`} onClick={() => consent && setPlaying(p=>!p)} aria-label="Play">
+                {playing && consent
+                  ? <svg width="18" height="18" viewBox="0 0 18 18"><rect x="3" y="2" width="4" height="14" fill="currentColor"/><rect x="11" y="2" width="4" height="14" fill="currentColor"/></svg>
+                  : <svg width="18" height="18" viewBox="0 0 18 18"><path d="M4 2 L16 9 L4 16 Z" fill="currentColor"/></svg>}
+              </button>
+              <div>
+                <div className="meta"><b>{tracks[track].t}</b></div>
+                <div className="meta">{tracks[track].freq} · {tracks[track].dur}</div>
+              </div>
+            </div>
+            {!consent && (
+              <p className="consent">
+                Klang wird nicht automatisch abgespielt.
+                <a href="#" onClick={e => { e.preventDefault(); setConsent(true); }} style={{color:'var(--accent-2)', marginLeft:4, textDecoration:'underline'}}>
+                  Zustimmen & laden
+                </a>
+              </p>
+            )}
+          </div>
+
+          <div>
+            <div className="mono" style={{fontSize:11, letterSpacing:'0.24em', textTransform:'uppercase', color:'var(--ink-dim)', marginBottom:24}}>
+              ── Tracks
+            </div>
+            {tracks.map((tr, i) => (
+              <div key={i}
+                onClick={()=>{ setTrack(i); if (consent) setPlaying(true); }}
+                style={{
+                  display:'flex', justifyContent:'space-between', alignItems:'center',
+                  padding:'16px 0', borderTop:'1px solid var(--rule)',
+                  cursor:'pointer',
+                  borderBottom: i === tracks.length-1 ? '1px solid var(--rule)' : 'none',
+                  color: track === i ? 'var(--paper)' : 'var(--ink-soft)',
+                }}>
+                <div>
+                  <div className="serif" style={{fontSize:20, marginBottom:4}}>{tr.t}</div>
+                  <div className="mono" style={{fontSize:10, letterSpacing:'.2em', color:'var(--ink-dim)'}}>{tr.freq}</div>
+                </div>
+                <div className="mono" style={{fontSize:11, color:'var(--ink-dim)'}}>{tr.dur}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// =============== TESTIMONIALS ===============
+function Testimonials(){
+  const items = [
+    { q:'Nach fünf Minuten war ich woanders. Nach einer Stunde war ich wieder ich — nur leichter.', who:'Sandra K.', ev:'Gong Bath · Olpe' },
+    { q:'Ich dachte, das ist nichts für mich. Dann habe ich gespürt, wie sich etwas im Brustkorb löst, wofür ich keine Worte habe.', who:'Marcus B.', ev:'Klang & Kakao · Pulheim' },
+    { q:'Julia hält einen Raum, der nicht spirituell gewollt wirkt. Einfach echt, einfach still. Genau deshalb wirkt es.', who:'Anna P.', ev:'Sound Journey 1:1' },
+    { q:'Unser Team war danach leiser, fokussierter, und niemand hat auf sein Handy geschaut. Das sagt alles.', who:'Dr. Julia R.', ev:'Corporate Session, Köln' },
+  ];
+  return (
+    <section>
+      <div className="container" style={{marginBottom:40}}>
+        <div className="reveal">
+          <div className="eyebrow"><span className="dot"></span> 05 — Stimmen</div>
+          <h2 className="display">Was <em>bleibt,</em><br/>wenn der Klang geht.</h2>
+        </div>
+      </div>
+      <div className="testimonial-track reveal">
+        {items.map((it,i) => (
+          <div key={i} className="tcard">
+            <p className="q">{it.q}</p>
+            <div className="who"><b>{it.who}</b><span>{it.ev}</span></div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// =============== IMAGE STRIP ===============
+function ImageStrip(){
+  const images = [
+    { src: 'uploads/Session1.jpg', alt: 'Gong Session Setup' },
+    { src: 'uploads/gong.jpg', alt: 'Gong Nahaufnahme' },
+    { src: 'uploads/session2.jpg', alt: 'Kreisaufstellung' },
+    { src: 'uploads/Gong3.jpg', alt: 'Gong in der Natur' },
+    { src: 'uploads/Session3.JPG', alt: 'Session Atmosphäre' },
+    { src: 'uploads/gong2.jpg', alt: 'Gong Detail' },
+  ];
+  return (
+    <div className="image-strip">
+      <div className="image-strip-track">
+        {[...images, ...images].map((img, i) => (
+          <img key={i} src={img.src} alt={img.alt} className="strip-img" />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// =============== GALLERY ===============
+function Gallery({ onOpenLightbox }){
+  const images = [
+    { src: 'uploads/session2.jpg', label: 'Raum · Yoga Studio Olpe' },
+    { src: 'uploads/gong.jpg', label: 'Gong · Nahaufnahme' },
+    { src: 'uploads/Gong3.jpg', label: 'Outdoor · Natur' },
+    { src: 'uploads/Session1.jpg', label: 'Setup · Klangschalen' },
+    { src: 'uploads/gong2.jpg', label: 'Detail' },
+    { src: 'uploads/Session3.JPG', label: 'Atmosphäre' },
+  ];
+  return (
+    <section id="galerie">
+      <div className="container">
+        <div className="reveal" style={{marginBottom:48}}>
+          <div className="eyebrow"><span className="dot"></span> Eindrücke</div>
+          <h2 className="display">Raum & <em>Atmosphäre.</em></h2>
+        </div>
+        <div className="gallery reveal">
+          {images.map((img, i) => (
+            <div key={i} className="tile" onClick={() => onOpenLightbox(img.src)}>
+              <img src={img.src} alt={img.label} />
+              <div className="overlay">{img.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// =============== ABOUT ===============
+function About(){
+  return (
+    <section id="julia" style={{background:'var(--bg-2)'}}>
+      <div className="container">
+        <div className="two-col">
+          <div className="reveal">
+            <div className="eyebrow"><span className="dot"></span> 06 — Julia</div>
+            <h2 className="display"><em>Julia</em> Martyn</h2>
+            <p className="lede" style={{marginBottom:24}}>
+              Gong-Spielerin. Klangarbeiterin. Zuhörerin.
+            </p>
+            <p className="lede">
+              Julia ist über die Yogamatte zum Gong gekommen — und geblieben,
+              weil der Gong Dinge tut, die Worte nicht können.
+              Sie arbeitet heute mit Einzelpersonen, Yoga-Studios und Teams in NRW
+              und auf Anfrage darüber hinaus.
+            </p>
+            <div style={{display:'flex', gap:24, marginTop:40}}>
+              <a className="btn" href="#kontakt">Termin anfragen</a>
+              <a className="btn ghost" href="#events">Events</a>
+            </div>
+          </div>
+          <div className="reveal julia-portrait-frame">
+            <img src="assets/julia-about.jpg" alt="Julia Martyn" />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// =============== FAQ ===============
+function FAQ(){
+  const items = [
+    { q:'Ich war noch nie bei sowas — ist das was für mich?', a:'Ja. Gerade dann. Du musst nichts können, nichts verstehen, nichts glauben. Du liegst, ich spiele, dein Körper macht den Rest.' },
+    { q:'Muss ich meditieren können?', a:'Nein. Der Gong tut die Arbeit. Gedanken dürfen kommen und gehen. Es gibt keinen richtigen Zustand — nur deinen.' },
+    { q:'Was zieh ich an?', a:'Bequemes, in dem du liegen kannst. Bring eine warme Decke und gern dicke Socken mit. In der Ruhe kühlt der Körper aus.' },
+    { q:'Ist das esoterisch?', a:'Nein. Klangarbeit wirkt über messbare physiologische Wege — Vagusnerv, Parasympathikus, Cortisol. Die Sprache darf poetisch sein. Die Wirkung ist körperlich.' },
+    { q:'Wirkt das wirklich — oder ist es nur schön?', a:'Es ist beides. Unmittelbar: tiefe Entspannung. Langfristig: dein Nervensystem lernt, schneller in Balance zu finden. Regelmäßigkeit baut Resilienz auf.' },
+    { q:'Wer sollte lieber nicht kommen?', a:'Bei schweren psychischen Erkrankungen, Herzproblemen, schallinduzierter Epilepsie, Herzschrittmacher oder im ersten Trimester der Schwangerschaft: bitte nicht. Bei Unsicherheit: kurz schreiben.' },
+  ];
+  const [open, setOpen] = useState(0);
+  return (
+    <section id="faq" data-screen-label="faq">
+      <div className="container">
+        <div className="reveal" style={{marginBottom:56, maxWidth:640}}>
+          <div className="eyebrow"><span className="dot"></span> 06 — Häufig gefragt</div>
+          <h2 className="display">Was <em>Menschen</em><br/>vorher wissen wollen.</h2>
+        </div>
+        <div className="faq-list">
+          {items.map((it, i) => (
+            <div key={i} className={`faq-item reveal ${open===i ? 'open':''}`} onClick={() => setOpen(open===i ? -1 : i)} data-cursor="big">
+              <div className="faq-head">
+                <h4 className="serif">{it.q}</h4>
+                <span className="faq-plus">{open===i ? '−' : '+'}</span>
+              </div>
+              <div className="faq-body"><p>{it.a}</p></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// =============== FINAL CTA ===============
+function FinalCTA({ nextEvent }){
+  return (
+    <section id="final" className="final-cta" data-screen-label="final">
+      <div className="container">
+        <div className="final-inner reveal">
+          <div className="eyebrow"><span className="dot"></span> Komm einmal an</div>
+          <h2 className="display" style={{fontSize:'clamp(48px, 7vw, 104px)', maxWidth: 1000}}>
+            Schwingung,<br/>die dich <em>berührt.</em>
+          </h2>
+          <p className="lede serif" style={{fontSize: 24, maxWidth: 560, marginTop: 24}}>
+            Eine Stunde Gong — ein Nervensystem, das wieder atmen kann.
+          </p>
+          <div className="final-next">
+            <div>
+              <div className="mono" style={{fontSize:10, letterSpacing:'.24em', textTransform:'uppercase', color:'var(--ink-dim)'}}>Nächster Klang</div>
+              <div className="serif" style={{fontSize:28, color:'var(--paper)', marginTop:6}}>
+                {nextEvent.d}. {nextEvent.m} {nextEvent.yr} · {nextEvent.loc}
+              </div>
+              <div className="mono" style={{fontSize:11, color:'var(--accent-2)', letterSpacing:'.15em', marginTop:6}}>{nextEvent.spots}</div>
+            </div>
+            <div className="final-cta-row">
+              <a href="#events" className="btn pulse magnet" data-cursor="big">Platz sichern →</a>
+              <a href="mailto:julia@gongfrequencies.com" className="btn ghost magnet" data-cursor="big">Schreib Julia direkt</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// =============== CONTACT ===============
+function Contact(){
+  return (
+    <section id="kontakt">
+      <div className="container">
+        <div className="two-col">
+          <div className="reveal">
+            <div className="eyebrow"><span className="dot"></span> 07 — Kontakt</div>
+            <h2 className="display">Schreib<br/>mir <em>etwas.</em></h2>
+            <p className="lede" style={{marginBottom:40, maxWidth:380}}>
+              Ob Frage, Buchung oder Einladung zu eurem Retreat — ich antworte persönlich.
+            </p>
+            <div className="mono" style={{fontSize:12, letterSpacing:'0.2em', lineHeight:2, color:'var(--ink-soft)'}}>
+              <div style={{color:'var(--ink-dim)'}}>E-MAIL</div>
+              <a href="mailto:julia@gongfrequencies.com">julia@gongfrequencies.com</a>
+              <div style={{color:'var(--ink-dim)', marginTop:20}}>BASIS</div>
+              OLPE · NRW
+              <div style={{color:'var(--ink-dim)', marginTop:20}}>VERFÜGBARKEIT</div>
+              NRW, AUF ANFRAGE DEUTSCHLANDWEIT
+            </div>
+          </div>
+          <form className="contact-form reveal" onSubmit={e => {e.preventDefault(); alert('Danke — ich melde mich bald.');}}>
+            <div>
+              <label>Dein Name</label>
+              <input type="text" required />
+            </div>
+            <div>
+              <label>E-mail</label>
+              <input type="email" required />
+            </div>
+            <div>
+              <label>Was möchtest du mir sagen?</label>
+              <textarea required></textarea>
+            </div>
+            <div style={{fontSize:12, color:'var(--ink-dim)', lineHeight:1.5}}>
+              Mit dem Absenden bestätigst du, dass deine Daten zur Kontaktaufnahme gespeichert werden dürfen.
+            </div>
+            <div>
+              <button className="btn" type="submit">Absenden →</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// =============== FOOTER ===============
+function Footer(){
+  return (
+    <footer>
+      <div>© 2026 · Julia Martyn · Gong Frequencies</div>
+      <div style={{display:'flex', gap:28}}>
+        <a href="#">Impressum</a>
+        <a href="#">Datenschutz</a>
+        <a href="mailto:julia@gongfrequencies.com">E-mail</a>
+      </div>
+    </footer>
+  );
+}
+
+// =============== EVENT DETAIL ===============
+function EventDetail({ event, onClose }){
+  useEffect(() => {
+    document.body.style.overflow = event ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [event]);
+
+  if (!event) return null;
+
+  return (
+    <div style={{
+      position:'fixed', inset:0, zIndex:300, background:'var(--bg)',
+      overflowY:'auto',
+      animation: 'fadeIn .5s ease',
+    }}>
+      <div style={{maxWidth:1080, margin:'0 auto', padding:'40px 36px 120px'}}>
+        <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:80}}>
+          <div className="mono" style={{fontSize:11, letterSpacing:'0.3em', textTransform:'uppercase', color:'var(--ink-dim)'}}>
+            Event · {event.d}.{event.m} {event.yr}
+          </div>
+          <button onClick={onClose} style={{
+            background:'transparent', border:'1px solid var(--rule)', color:'var(--paper)',
+            width:44, height:44, borderRadius:'50%', cursor:'pointer', fontSize:18,
+          }}>×</button>
+        </div>
+
+        <div style={{display:'grid', gridTemplateColumns:'2fr 1fr', gap:80, alignItems:'start'}}>
+          <div>
+            <h1 className="serif" style={{fontSize:'clamp(48px,7vw,96px)', lineHeight:1, margin:'0 0 40px', color:'var(--paper)'}}>
+              {event.title}
+            </h1>
+            <p className="lede serif" style={{fontSize:26, marginBottom:40, color:'var(--paper)'}}>
+              Ein Abend, an dem du nichts tun musst als da sein.
+              Atmen. Zulassen. Schwingen.
+            </p>
+
+            <h3 className="serif" style={{fontSize:24, color:'var(--paper)', marginTop:48, marginBottom:16}}>Ablauf</h3>
+            <ol style={{padding:0, listStyle:'none', color:'var(--ink-soft)'}}>
+              {[
+                ['19:00', 'Ankommen & sanftes Atmen'],
+                ['19:10', 'Körper-Einstimmung im Liegen'],
+                ['19:20', 'Gongbad — ca. 50 Minuten'],
+                ['20:10', 'Stille · Integration'],
+                ['20:20', 'Warmer Tee, leises Ankommen'],
+              ].map(([t, d], i) => (
+                <li key={i} style={{display:'grid', gridTemplateColumns:'90px 1fr', gap:24, padding:'18px 0', borderTop:'1px solid var(--rule)'}}>
+                  <span className="mono" style={{fontSize:13, color:'var(--accent-2)', letterSpacing:'0.1em'}}>{t}</span>
+                  <span>{d}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          <aside style={{position:'sticky', top:40, background:'var(--bg-2)', border:'1px solid var(--rule)', padding:36}}>
+            <div className="mono" style={{fontSize:10, letterSpacing:'.24em', color:'var(--ink-dim)', textTransform:'uppercase', marginBottom:8}}>Datum</div>
+            <div className="serif" style={{fontSize:28, color:'var(--paper)', marginBottom:24}}>{event.d}. {event.m} {event.yr}</div>
+
+            <div className="mono" style={{fontSize:10, letterSpacing:'.24em', color:'var(--ink-dim)', textTransform:'uppercase', marginBottom:8}}>Ort</div>
+            <div style={{color:'var(--paper)', marginBottom:24}}>{event.loc}</div>
+
+            <div className="mono" style={{fontSize:10, letterSpacing:'.24em', color:'var(--ink-dim)', textTransform:'uppercase', marginBottom:8}}>Investment</div>
+            <div className="serif" style={{fontSize:32, color:'var(--accent-2)', marginBottom:24}}>{event.price}</div>
+
+            <div className="mono" style={{fontSize:10, letterSpacing:'.24em', color:'var(--ink-dim)', textTransform:'uppercase', marginBottom:8}}>Plätze</div>
+            <div style={{color:'var(--paper)', marginBottom:32}}>{event.spots}</div>
+
+            <a href="#" className="btn" style={{width:'100%', justifyContent:'center'}}>Ticket sichern →</a>
+            <a href="#" onClick={e=>{e.preventDefault(); onClose();}} style={{display:'block', textAlign:'center', marginTop:16, fontSize:12, color:'var(--ink-dim)', letterSpacing:'0.2em', textTransform:'uppercase'}}>
+              ← zurück
+            </a>
+          </aside>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// =============== MAIN APP ===============
+const NEXT_EVENT = { d:'17', m:'APR', yr:'2026', loc:'Yoga Studio Olpe', spots:'noch 8 Plätze frei' };
+
+function App(){
+  const [tweaks, setTweaks] = useState(() => ({ ...window.TWEAK_DEFAULTS }));
+  const [editOpen, setEditOpen] = useState(false);
+  const [activeEvent, setActiveEvent] = useState(null);
+  const [lightboxImage, setLightboxImage] = useState(null);
+
+  useEffect(() => {
+    const h = document.documentElement;
+    h.setAttribute('data-palette', tweaks.palette);
+  }, [tweaks]);
+
+  useEffect(() => {
+    function onMsg(e){
+      const d = e.data || {};
+      if (d.type === '__activate_edit_mode') setEditOpen(true);
+      if (d.type === '__deactivate_edit_mode') setEditOpen(false);
+    }
+    window.addEventListener('message', onMsg);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', onMsg);
+  }, []);
+
+  function update(patch){
+    const next = { ...tweaks, ...patch };
+    setTweaks(next);
+    window.parent.postMessage({ type:'__edit_mode_set_keys', edits: patch }, '*');
+  }
+
+  useEffect(() => {
+    function autoApply(){
+      const sections = document.querySelectorAll('section[id]:not(#hero)');
+      sections.forEach(sec => {
+        const host = sec.querySelector('.container, .resilience-grid, .timeline, .faq-list, .testimonial-grid, .final-inner') || sec;
+        const kids = Array.from(host.children);
+        kids.forEach((el, i) => {
+          if (!el.classList) return;
+          if (el.classList.contains('reveal')) return;
+          const tag = el.tagName.toLowerCase();
+          if (tag === 'style' || tag === 'script') return;
+          if (el.classList.contains('no-reveal')) return;
+          el.classList.add('reveal');
+          if (!el.hasAttribute('data-delay')){
+            const d = Math.min(i, 4);
+            if (d > 0) el.setAttribute('data-delay', String(d));
+          }
+        });
+      });
+    }
+    autoApply();
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(en => {
+        if (en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -8% 0px' });
+    const mo = new MutationObserver(() => {
+      autoApply();
+      document.querySelectorAll('.reveal:not(.in), .reveal-x:not(.in)').forEach(el => io.observe(el));
+    });
+    mo.observe(document.body, { childList:true, subtree:true });
+    document.querySelectorAll('.reveal, .reveal-x').forEach(el => io.observe(el));
+    return () => { io.disconnect(); mo.disconnect(); };
+  }, []);
+
+  useEffect(() => {
+    const prog = document.getElementById('scroll-progress');
+    function onScroll(){
+      const h = document.documentElement;
+      const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+      if (prog) prog.style.width = Math.min(100, Math.max(0, pct)) + '%';
+    }
+    window.addEventListener('scroll', onScroll, { passive:true });
+    onScroll();
+
+    const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    const ring = document.getElementById('cursor-ring');
+    const dot = document.getElementById('cursor-dot');
+    if (canHover && ring && dot){
+      document.body.classList.add('has-cursor');
+      let tx=0, ty=0, rx=0, ry=0;
+      function move(e){ tx = e.clientX; ty = e.clientY; dot.style.transform = `translate(${tx}px,${ty}px) translate(-50%,-50%)`; }
+      function loop(){
+        rx += (tx - rx) * 0.18;
+        ry += (ty - ry) * 0.18;
+        ring.style.transform = `translate(${rx}px,${ry}px) translate(-50%,-50%)`;
+        requestAnimationFrame(loop);
+      }
+      window.addEventListener('mousemove', move);
+      loop();
+      function enter(e){
+        const el = e.target.closest('[data-cursor="big"], a, button');
+        if (el) ring.classList.add('big');
+      }
+      function leave(e){
+        const el = e.target.closest('[data-cursor="big"], a, button');
+        if (el) ring.classList.remove('big');
+      }
+      document.addEventListener('mouseover', enter);
+      document.addEventListener('mouseout', leave);
+    }
+
+    const magnets = document.querySelectorAll('.magnet');
+    magnets.forEach(m => {
+      m.addEventListener('mousemove', (e) => {
+        const r = m.getBoundingClientRect();
+        const x = e.clientX - r.left - r.width/2;
+        const y = e.clientY - r.top - r.height/2;
+        m.style.transform = `translate(${x*0.25}px, ${y*0.35}px)`;
+      });
+      m.addEventListener('mouseleave', () => m.style.transform = '');
+    });
+
+    function ripple(e){
+      const btn = e.target.closest('.btn');
+      if (!btn) return;
+      const r = btn.getBoundingClientRect();
+      const d = document.createElement('span');
+      d.className = 'ripple';
+      const size = Math.max(r.width, r.height);
+      d.style.width = d.style.height = size + 'px';
+      d.style.left = (e.clientX - r.left - size/2) + 'px';
+      d.style.top = (e.clientY - r.top - size/2) + 'px';
+      btn.appendChild(d);
+      setTimeout(() => d.remove(), 700);
+    }
+    document.addEventListener('click', ripple);
+
+    const lb = document.getElementById('lightbox');
+    const close = document.getElementById('lightbox-close');
+    function cls(){ lb?.classList.remove('open'); }
+    close?.addEventListener('click', cls);
+    lb?.addEventListener('click', e => { if (e.target === lb) cls(); });
+
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  function openLightbox(src){
+    setLightboxImage(src);
+    document.getElementById('lightbox').classList.add('open');
+  }
+
+  function closeLightbox(){
+    setLightboxImage(null);
+    document.getElementById('lightbox').classList.remove('open');
+  }
+
+  return (
+    <>
+      <Nav />
+      <Hero nextEvent={NEXT_EVENT} />
+      <Intro />
+      <Pillars />
+      <Resilience />
+      <Timeline />
+      <Offerings />
+      <Events onOpen={setActiveEvent} />
+      <Player />
+      <Testimonials />
+      <Gallery onOpenLightbox={openLightbox} />
+      <About />
+      <FAQ />
+      <FinalCTA nextEvent={NEXT_EVENT} />
+      <Contact />
+      <Footer />
+
+      <EventDetail event={activeEvent} onClose={() => setActiveEvent(null)} />
+      <StickyEventBar event={NEXT_EVENT} />
+
+      {/* Lightbox */}
+      <div className="lightbox" id="lightbox" onClick={(e) => e.target.id === 'lightbox' && closeLightbox()}>
+        <button className="lightbox-close" onClick={closeLightbox}>×</button>
+        <div className="content">
+          {lightboxImage && <img src={lightboxImage} alt="Galerie Bild" />}
+        </div>
+      </div>
+
+      <div className="tweaks-panel" data-open={editOpen}>
+        <h5>Tweaks</h5>
+        <div className="row">
+          <label>Farbwelt</label>
+          <div className="swatches">
+            {[
+              ['terracotta', '#c2613a', 'Terra'],
+              ['ocker', '#d29244', 'Ocker'],
+              ['espresso', '#8a3a1f', 'Esp.'],
+            ].map(([key, col, label]) => (
+              <div key={key}
+                   data-active={tweaks.palette === key}
+                   className="swatch"
+                   style={{background:`linear-gradient(180deg, ${col} 0%, #1a120d 100%)`}}
+                   onClick={() => update({ palette: key })}>
+                {label}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('app')).render(<App />);
+  </script>
+</body>
+</html>
