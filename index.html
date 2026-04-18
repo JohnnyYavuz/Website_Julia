@@ -1997,11 +1997,11 @@ function Offerings(){
 
 // =============== EVENTS ===============
 const EVENTS = [
-  { id:'e1', d:'17', m:'APR', yr:'2026', title:'Gong Bath', who:'Yoga Studio Olpe · 19:00', loc:'Olpe', city:'Olpe', tag:'bath', price:'€ 28', spots:'8 / 20 frei', thumb:'uploads/Session1.jpg' },
-  { id:'e2', d:'02', m:'MAI', yr:'2026', title:'Klang & Kakao', who:'mit Tina · 17:00–18:30', loc:'Yogatraum Pulheim', city:'Pulheim', tag:'ritual', price:'€ 42', spots:'5 / 16 frei', thumb:'uploads/session2.jpg' },
-  { id:'e3', d:'15', m:'MAI', yr:'2026', title:'Sound Journey 1:1', who:'Einzelsession auf Termin', loc:'Privatraum Olpe', city:'Olpe', tag:'solo', price:'€ 90', spots:'nach Absprache', thumb:'uploads/gong.jpg' },
-  { id:'e4', d:'06', m:'JUN', yr:'2026', title:'Gong & Neumond', who:'Zeremonie · 20:00', loc:'Outdoor · Biggesee', city:'Olpe', tag:'ritual', price:'€ 38', spots:'12 / 24 frei', thumb:'uploads/Gong3.jpg' },
-  { id:'e5', d:'21', m:'JUN', yr:'2026', title:'Sommer-Sonnwend-Gong', who:'Sonderabend · 21:00', loc:'Yoga Studio Olpe', city:'Olpe', tag:'bath', price:'€ 32', spots:'ausverkauft', thumb:'uploads/session2.jpg' },
+  { id:'e1', d:'17', m:'APR', yr:'2026', title:'Gong Bath', who:'Yoga Studio Olpe · 19:00', loc:'Olpe', city:'Olpe', tag:'bath', price:'€ 28', spots:'8 / 20 frei', thumb:'assets/Session1.jpg' },
+  { id:'e2', d:'02', m:'MAI', yr:'2026', title:'Klang & Kakao', who:'mit Tina · 17:00–18:30', loc:'Yogatraum Pulheim', city:'Pulheim', tag:'ritual', price:'€ 42', spots:'5 / 16 frei', thumb:'assets/session2.jpg' },
+  { id:'e3', d:'15', m:'MAI', yr:'2026', title:'Sound Journey 1:1', who:'Einzelsession auf Termin', loc:'Privatraum Olpe', city:'Olpe', tag:'solo', price:'€ 90', spots:'nach Absprache', thumb:'assets/gong.jpg' },
+  { id:'e4', d:'06', m:'JUN', yr:'2026', title:'Gong & Neumond', who:'Zeremonie · 20:00', loc:'Outdoor · Biggesee', city:'Olpe', tag:'ritual', price:'€ 38', spots:'12 / 24 frei', thumb:'assets/Gong3.jpg' },
+  { id:'e5', d:'21', m:'JUN', yr:'2026', title:'Sommer-Sonnwend-Gong', who:'Sonderabend · 21:00', loc:'Yoga Studio Olpe', city:'Olpe', tag:'bath', price:'€ 32', spots:'ausverkauft', thumb:'assets/session2.jpg' },
 ];
 
 function Events({ onOpen }){
@@ -2151,12 +2151,12 @@ function Testimonials(){
 // =============== IMAGE STRIP ===============
 function ImageStrip(){
   const images = [
-    { src: 'uploads/Session1.jpg', alt: 'Gong Session Setup' },
-    { src: 'uploads/gong.jpg', alt: 'Gong Nahaufnahme' },
-    { src: 'uploads/session2.jpg', alt: 'Kreisaufstellung' },
-    { src: 'uploads/Gong3.jpg', alt: 'Gong in der Natur' },
-    { src: 'uploads/Session3.JPG', alt: 'Session Atmosphäre' },
-    { src: 'uploads/gong2.jpg', alt: 'Gong Detail' },
+    { src: 'assets/Session1.jpg', alt: 'Gong Session Setup' },
+    { src: 'assets/gong.jpg', alt: 'Gong Nahaufnahme' },
+    { src: 'assets/session2.jpg', alt: 'Kreisaufstellung' },
+    { src: 'assets/Gong3.jpg', alt: 'Gong in der Natur' },
+    { src: 'assets/Session3.JPG', alt: 'Session Atmosphäre' },
+    { src: 'assets/gong2.jpg', alt: 'Gong Detail' },
   ];
   return (
     <div className="image-strip">
@@ -2172,12 +2172,12 @@ function ImageStrip(){
 // =============== GALLERY ===============
 function Gallery({ onOpenLightbox }){
   const images = [
-    { src: 'uploads/session2.jpg', label: 'Raum · Yoga Studio Olpe' },
-    { src: 'uploads/gong.jpg', label: 'Gong · Nahaufnahme' },
-    { src: 'uploads/Gong3.jpg', label: 'Outdoor · Natur' },
-    { src: 'uploads/Session1.jpg', label: 'Setup · Klangschalen' },
-    { src: 'uploads/gong2.jpg', label: 'Detail' },
-    { src: 'uploads/Session3.JPG', label: 'Atmosphäre' },
+    { src: 'assets/session2.jpg', label: 'Raum · Yoga Studio Olpe' },
+    { src: 'assets/gong.jpg', label: 'Gong · Nahaufnahme' },
+    { src: 'assets/Gong3.jpg', label: 'Outdoor · Natur' },
+    { src: 'assets/Session1.jpg', label: 'Setup · Klangschalen' },
+    { src: 'assets/gong2.jpg', label: 'Detail' },
+    { src: 'assets/Session3.JPG', label: 'Atmosphäre' },
   ];
   return (
     <section id="galerie">
